@@ -1,0 +1,21 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import HomePage from '../pages/Home'; 
+
+import { Home as HomeIcon } from 'lucide-react'; 
+import LoginPage from '../admin/loginPage';
+import AdminDashboard from '../admin/adminDashboard';
+
+const AppRoutes = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/admin/login" element={<LoginPage />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default AppRoutes;
