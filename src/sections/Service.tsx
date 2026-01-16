@@ -33,7 +33,6 @@ const Services = () => {
               viewport={{ once: true }} 
               transition={{ duration: 0.5, delay: index * 0.1 }}
               
-              // --- HOVER ANIMATION USING FRAMER MOTION ---
               whileHover={{ 
                 y: -10,
                 transition: { duration: 0.3 } 
@@ -50,7 +49,6 @@ const Services = () => {
                   position: 'relative',
                   transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
                 }}
-                // Manual Hover simulation using event listeners
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = '#2DD4BF';
                   e.currentTarget.style.boxShadow = '0 15px 30px rgba(16, 185, 129, 0.15)';
@@ -82,7 +80,6 @@ const Services = () => {
                   ))}
                 </Group>
 
-                {/* Chota sa Arrow icon professional look ke liye */}
                 <Box style={{ position: 'absolute', bottom: 20, right: 20, opacity: 0.2 }}>
                    <ArrowUpRight size={18} color="white" />
                 </Box>

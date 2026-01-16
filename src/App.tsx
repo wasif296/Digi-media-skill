@@ -1,4 +1,4 @@
-import "@mantine/core/styles.css"; // Sirf ye aik zaroori CSS import
+import "@mantine/core/styles.css"; 
 import { MantineProvider } from "@mantine/core";
 import { theme } from "./theme"; 
 import AppRoutes from "./routes/AppRoutes"; 

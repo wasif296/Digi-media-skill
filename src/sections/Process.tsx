@@ -1,4 +1,4 @@
-import { Container, Title, Text, Box, Group, Stack, SimpleGrid, Paper } from '@mantine/core';
+import { Container, Title, Text, Box,  Stack, SimpleGrid, Paper } from '@mantine/core';
 import { motion } from 'framer-motion';
 import { Lightbulb, Rocket, TrendingUp, ArrowRight } from 'lucide-react';
 
@@ -8,7 +8,7 @@ const steps = [
     title: "Strategy",
     desc: "We analyze your business, competitors, and target audience to craft a winning digital strategy.",
     icon: Lightbulb,
-    color: "#3b82f6" // Blue Icon
+    color: "#3b82f6" 
   },
   {
     id: "02",
@@ -31,7 +31,6 @@ const Process = () => {
     <Box py={100} style={{ background: '#020408', position: 'relative' }}>
       <Container size="lg">
         
-        {/* Header Section */}
         <Stack align="center" mb={80} gap={5}>
           <Text size="xs" fw={800} style={{ color: '#3b82f6', letterSpacing: '3px', textTransform: 'uppercase' }}>
             How We Work
@@ -44,7 +43,6 @@ const Process = () => {
           </Text>
         </Stack>
 
-        {/* Process Cards Grid */}
         <SimpleGrid 
           cols={{ base: 1, md: 3 }} 
           spacing={0} 
@@ -76,30 +74,27 @@ const Process = () => {
                   onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)')}
                   onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)')}
                 >
-                  {/* BIG BACKGROUND NUMBER (Matching Screenshot) */}
                   <Text style={{ 
                     position: 'absolute', top: 20, left: 30, 
                     fontSize: '7rem', fontWeight: 900, 
-                    color: '#10B981', // Emerald Green Numbers
+                    color: '#10B981', 
                     opacity: 0.1, zIndex: 0, userSelect: 'none',
                     lineHeight: 1
                   }}>
                     {step.id}
                   </Text>
 
-                  {/* ICON BOX */}
                   <Box mb={30} style={{ 
                     width: '55px', height: '55px', borderRadius: '14px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: 'rgba(59, 130, 246, 0.03)', 
-                    border: '2px solid #3b82f6', // Blue Border from Screenshot
+                    border: '2px solid #3b82f6', 
                     position: 'relative', zIndex: 1,
                     boxShadow: '0 0 15px rgba(59, 130, 246, 0.2)'
                   }}>
                     <step.icon size={24} color="#3b82f6" />
                   </Box>
 
-                  {/* CONTENT */}
                   <Stack gap="sm" style={{ position: 'relative', zIndex: 1 }}>
                     <Title order={3} style={{ color: 'white', fontWeight: 800, fontSize: '1.6rem' }}>
                       {step.title}
@@ -111,7 +106,6 @@ const Process = () => {
                 </Paper>
               </motion.div>
 
-              {/* CONNECTING ARROW (Between Cards - Visible on Desktop) */}
               {index < steps.length - 1 && (
                 <Box visibleFrom="md" style={{ 
                   position: 'absolute', right: -12, zIndex: 10,

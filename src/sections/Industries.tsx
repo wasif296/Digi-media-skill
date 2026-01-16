@@ -1,8 +1,7 @@
-import { Container, Title, Text, Box, Group, Stack, Image, Badge } from '@mantine/core';
+import { Container, Title, Text, Box, Group, Stack, Image } from '@mantine/core';
 import { motion } from 'framer-motion';
 import { Home, Utensils, Calculator, Car, UtensilsCrossed } from 'lucide-react';
 
-// --- IMAGES IMPORT ---
 import realEstateImg from '../assets/Real Estate.jpg';
 import restaurantImg from '../assets/Restaurant Industry.jpg';
 import taxImg from '../assets/FilerTax Services.jpg';
@@ -26,7 +25,7 @@ const industries = [
     icon: Utensils,
     image: restaurantImg,
     stats: ["3x Online Orders", "45K+ Followers"],
-    align: 'right' // Image left, Text right
+    align: 'right' 
   },
   {
     id: "03",
@@ -62,7 +61,6 @@ const Industries = () => {
     <Box py={120} style={{ background: '#020408', position: 'relative', overflow: 'hidden' }}>
       
       <Container size="lg">
-        {/* Section Header */}
         <Stack align="center" mb={100} gap="xs">
           <Box style={{ border: '1px solid #10B981', padding: '4px 15px', borderRadius: '50px', background: 'rgba(16, 185, 129, 0.05)' }}>
              <Text size="xs" fw={800} c="#10B981" style={{ letterSpacing: 2 }}>INDUSTRIES</Text>
@@ -73,10 +71,8 @@ const Industries = () => {
           <Text c="dimmed" ta="center" fw={500}>Specialized strategies tailored to your sector's unique challenges</Text>
         </Stack>
 
-        {/* --- TIMELINE AREA --- */}
         <Box style={{ position: 'relative' }}>
           
-          {/* Exact Central Vertical Line (Visible on Desktop) */}
           <Box visibleFrom="md" style={{ 
             position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', 
             background: 'rgba(255, 255, 255, 0.1)',
@@ -96,7 +92,6 @@ const Industries = () => {
                   style={{ flexDirection: isTextLeft ? 'row' : 'row-reverse' } as any}
                   gap={0}
                 >
-                  {/* TEXT COLUMN */}
                   <Box style={{ flex: 1, paddingRight: isTextLeft ? '60px' : '0', paddingLeft: isTextLeft ? '0' : '60px' }}>
                     <motion.div
                       initial={{ opacity: 0, x: isTextLeft ? -30 : 30 }}
@@ -117,7 +112,6 @@ const Industries = () => {
                           {item.desc}
                         </Text>
 
-                        {/* Stats Badges */}
                         <Group gap="sm">
                           {item.stats.map(stat => (
                             <Box key={stat} style={{ 
@@ -132,7 +126,6 @@ const Industries = () => {
                     </motion.div>
                   </Box>
 
-                  {/* CENTER CIRCLE (Matches Screenshot Circle) */}
                   <Box visibleFrom="md" style={{ zIndex: 5, width: '80px', display: 'flex', justifyContent: 'center' }}>
                     <Box style={{ 
                       width: '32px', height: '32px', borderRadius: '50%', background: '#020408',
@@ -143,7 +136,6 @@ const Industries = () => {
                     </Box>
                   </Box>
 
-                  {/* IMAGE COLUMN */}
                   <Box style={{ flex: 1, paddingLeft: isTextLeft ? '60px' : '0', paddingRight: isTextLeft ? '0' : '60px' }}>
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}

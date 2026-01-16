@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Container, Title, Text, Box, Group, Button, Paper, Badge, Grid, Stack } from '@mantine/core';
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
-import { ArrowUpRight, TrendingUp, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, TrendingUp } from 'lucide-react';
 
-// --- 1. ANIMATED COUNTER COMPONENT ---
 const Counter = ({ value }: { value: number }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
@@ -30,7 +29,6 @@ const Counter = ({ value }: { value: number }) => {
   return <span ref={ref}>{displayValue}</span>;
 };
 
-// --- 2. PORTFOLIO CARD COMPONENT ---
 const PortfolioCard = ({ category, title, result, height, isLarge }: any) => (
   <motion.div 
     whileHover={{ y: -10 }} 
@@ -56,7 +54,6 @@ const PortfolioCard = ({ category, title, result, height, isLarge }: any) => (
         <Badge color="emerald" radius="xl" size="md" variant="filled" style={{ boxShadow: '0 0 15px rgba(16, 185, 129, 0.3)' }}>{result}</Badge>
       </Group>
 
-      {/* Internal Visual Mockup */}
       <Box style={{ 
         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
         width: isLarge ? '70%' : '85%', height: '35%', background: 'rgba(16, 185, 129, 0.03)',
@@ -85,17 +82,14 @@ const PortfolioCard = ({ category, title, result, height, isLarge }: any) => (
   </motion.div>
 );
 
-// --- 3. MAIN PORTFOLIO SECTION ---
 const Portfolio = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const categories = ["All", "Web Design", "SEO", "SMM"];
 
   return (
     <Box py={120} style={{ background: '#020408' }}>
-      {/* Extra Large Container for Wide Layout */}
       <Container size="xl">
         
-        {/* Header Area */}
         <Box mb={70} style={{ textAlign: 'center' }}>
           <Badge variant="dot" color="emerald" size="lg" mb="md">OUR IMPACT</Badge>
           <Title order={2} style={{ color: 'white', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 900, letterSpacing: '-2px', lineHeight: 1 }}>
@@ -104,7 +98,6 @@ const Portfolio = () => {
           <Text c="dimmed" size="lg" mt="md" fw={500}>Transforming digital presence with measurable outcomes</Text>
         </Box>
 
-        {/* Filters */}
         <Group justify="center" mb={60} gap="sm">
           {categories.map((cat) => (
             <Button
@@ -125,7 +118,6 @@ const Portfolio = () => {
           ))}
         </Group>
 
-        {/* Bento Grid (Matching Screenshot) */}
         <Grid gutter="xl">
           <Grid.Col span={{ base: 12, md: 7 }}>
             <PortfolioCard 
@@ -163,7 +155,6 @@ const Portfolio = () => {
           </Grid.Col>
         </Grid>
 
-        {/* --- ANIMATED STATS BAR (Wide Gap) --- */}
         <Group justify="space-around" mt={150} wrap="nowrap" gap={100}>
            <div style={{ textAlign: 'center' }}>
              <Text fw={900} style={{ fontSize: 'clamp(2rem, 7vw, 5rem)', color: '#2DD4BF', lineHeight: 1, letterSpacing: '-4px' }}>

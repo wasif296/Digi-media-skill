@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Container, Title, Text, Box, Stack, TextInput, Textarea, Button, Group, UnstyledButton, Paper, Center, SimpleGrid } from '@mantine/core';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Mail, Phone, Building, Check, ArrowRight, ArrowLeft, MessageSquare, Target } from 'lucide-react';
+import { User, Check, ArrowRight, ArrowLeft, MessageSquare, Target } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 
@@ -33,7 +33,6 @@ const ContactForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Bhai EmailJS ki website se keys le kar yahan daal dena:
     const serviceId = 'YOUR_SERVICE_ID';
     const templateId = 'YOUR_TEMPLATE_ID';
     const publicKey = 'YOUR_PUBLIC_KEY';
@@ -59,7 +58,6 @@ const ContactForm = () => {
     <Box py={100} style={{ background: '#020408' }}>
       <Container size={750}>
         
-        {/* --- HEADER (Matches Screenshot) --- */}
         <Stack align="center" mb={60} gap={5}>
           <Box style={{ border: '1px solid rgba(45, 212, 191, 0.3)', padding: '5px 15px', borderRadius: '50px', background: 'rgba(45, 212, 191, 0.05)' }}>
              <Text size="xs" fw={800} c="#2DD4BF" style={{ letterSpacing: 2 }}>GET STARTED</Text>
@@ -70,7 +68,6 @@ const ContactForm = () => {
           <Text c="dimmed" ta="center" fw={500}>Tell us about your project in a few simple steps</Text>
         </Stack>
 
-        {/* --- STEP INDICATORS (Matching Screenshot Dots & Lines) --- */}
         <Group justify="center" mb={60} gap={0} style={{ position: 'relative' }}>
            {[1, 2, 3].map((s) => (
              <Group key={s} gap={0}>
@@ -88,7 +85,6 @@ const ContactForm = () => {
            ))}
         </Group>
 
-        {/* --- MAIN BOX (The Screenshot Box Design) --- */}
         <Paper 
           p={{ base: 30, md: 60 }} 
           radius="32px" 
@@ -102,7 +98,6 @@ const ContactForm = () => {
           <form onSubmit={handleSendEmail}>
             <AnimatePresence mode="wait">
               
-              {/* STEP 1: YOUR DETAILS */}
               {step === 1 && (
                 <motion.div key="step1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
                   <Stack gap={40}>
@@ -120,7 +115,6 @@ const ContactForm = () => {
                 </motion.div>
               )}
 
-              {/* STEP 2: SERVICES NEEDED */}
               {step === 2 && (
                 <motion.div key="step2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
                   <Stack gap={40}>
@@ -150,7 +144,6 @@ const ContactForm = () => {
                 </motion.div>
               )}
 
-              {/* STEP 3: PROJECT DETAILS */}
               {step === 3 && (
                 <motion.div key="step3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
                   <Stack gap={40}>
@@ -172,7 +165,6 @@ const ContactForm = () => {
   );
 };
 
-// --- STYLES (Exact Screenshot Match) ---
 const inputStyles = {
   input: {
     background: 'rgba(255, 255, 255, 0.03)',

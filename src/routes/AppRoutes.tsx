@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '../pages/Home'; 
 
-import { Home as HomeIcon } from 'lucide-react'; 
 import LoginPage from '../admin/loginPage';
 import AdminDashboard from '../admin/adminDashboard';
 

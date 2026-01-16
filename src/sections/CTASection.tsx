@@ -13,7 +13,6 @@ const CTASection = () => {
         borderTop: '1px solid rgba(255,255,255,0.03)'
       }}
     >
-      {/* --- BACKGROUND RADIAL GLOW --- */}
       <Box style={{ 
         position: 'absolute', top: '50%', left: '50%', 
         width: '600px', height: '600px', 
@@ -25,7 +24,6 @@ const CTASection = () => {
       <Container size="lg" style={{ position: 'relative', zIndex: 2 }}>
         <Stack align="center" gap="xl">
           
-          {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -47,7 +45,6 @@ const CTASection = () => {
             </Box>
           </motion.div>
 
-          {/* Main Headline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -70,7 +67,6 @@ const CTASection = () => {
             </Title>
           </motion.div>
 
-          {/* Subtext */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -82,7 +78,6 @@ const CTASection = () => {
             </Text>
           </motion.div>
 
-          {/* Glowing CTA Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

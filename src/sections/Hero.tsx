@@ -1,6 +1,6 @@
 import { Container, Title, Text, Button, Group, Box, Stack, Paper, SimpleGrid, Badge } from '@mantine/core';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, TrendingUp, Users, DollarSign, BarChart3, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, Play, TrendingUp, ArrowUpRight } from 'lucide-react';
 
 const SmallStat = ({ label, value }: { label: string, value: string }) => (
   <Box p="sm" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>

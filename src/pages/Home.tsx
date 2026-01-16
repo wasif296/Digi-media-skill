@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Box } from '@mantine/core';
 import Navbar from '../components/Navbar';
 import Hero from '../sections/Hero';
@@ -7,12 +7,12 @@ import Services from '../sections/Service';
 import TrustedBy from '../sections/TrustedBy';
 import Portfolio from '../sections/Portfolio';
 import Industries from '../sections/Industries';
-import Process from '../sections/process';
 import Clientsays from '../sections/Clientsays';
 import CTASection from '../sections/CTASection';
 import ContactForm from '../sections/ContactForm';
 import Footer from '../sections/Footer';
 import Aboutus from '../sections/Aboutus';
+import Process from '../sections/Process';
 
 const HomePage = () => {
   return (

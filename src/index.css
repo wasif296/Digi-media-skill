@@ -4,12 +4,11 @@
 
 body {
   margin: 0;
-  background-color: #050608; /* Midnight Black from screenshot */
+  background-color: #050608; 
   color: white;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Glassmorphism scrollbar (Optional but looks pro) */
 ::-webkit-scrollbar {
   width: 5px;
 }

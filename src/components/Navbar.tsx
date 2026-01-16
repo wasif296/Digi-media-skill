@@ -5,22 +5,20 @@ import logoImg from '../assets/digi media.jpg';
 const Navbar = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
 
-  // --- 1. SMOOTH SCROLL LOGIC ---
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
-      close(); // Mobile menu band karne ke liye
+      close(); 
     }
   };
 
-  // --- 2. NAV LINKS WITH MAPPING IDs ---
   const navLinks = [
     { label: 'Services', id: 'services' },
     { label: 'Industries', id: 'industries' },
     { label: 'Portfolio', id: 'portfolio' },
-    { label: 'About', id: 'footer' },   // Request: About -> Footer
-    { label: 'Contact', id: 'contact' }, // Request: Contact -> ContactForm
+    { label: 'About', id: 'footer' },   
+    { label: 'Contact', id: 'contact' }, 
   ];
 
   return (
@@ -35,7 +33,6 @@ const Navbar = () => {
       <Container size="lg" h={{ base: 70, md: 80 }}>
         <Group justify="space-between" h="100%" wrap="nowrap">
           
-          {/* Logo - Click to Top */}
           <Group gap="xs" onClick={() => scrollToSection('home')} style={{ cursor: 'pointer' }}>
             <Image src={logoImg} w={{ base: 32, md: 40 }} h={{ base: 32, md: 40 }} radius="md" />
             <Text fw={900} size="xl" style={{ color: 'white', letterSpacing: -0.5 }}>
@@ -43,12 +40,11 @@ const Navbar = () => {
             </Text>
           </Group>
 
-          {/* --- DESKTOP LINKS --- */}
           <Group gap="xl" visibleFrom="md">
             {navLinks.map((item) => (
               <Text 
                 key={item.label} 
-                onClick={() => scrollToSection(item.id)} // Scroll Logic call
+                onClick={() => scrollToSection(item.id)} 
                 fw={600} 
                 size="sm" 
                 style={{ color: '#999', cursor: 'pointer', transition: '0.3s' }}
@@ -64,19 +60,17 @@ const Navbar = () => {
               radius="md"
               px="xl"
               style={{ fontWeight: 800 }}
-              onClick={() => scrollToSection('contact')} // Get Started -> Contact
+              onClick={() => scrollToSection('contact')} 
             >
               Get Started
             </Button>
           </Group>
 
-          {/* BURGER ICON */}
           <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="sm" color="#10B981" />
 
         </Group>
       </Container>
 
-      {/* --- MOBILE MENU --- */}
       <Drawer
         opened={opened}
         onClose={close}
@@ -100,7 +94,7 @@ const Navbar = () => {
               key={item.label} 
               fw={600} 
               size="lg" 
-              onClick={() => scrollToSection(item.id)} // Scroll logic call
+              onClick={() => scrollToSection(item.id)} 
               style={{ color: '#999', cursor: 'pointer' }}
             >
               {item.label}

@@ -10,7 +10,6 @@ const Footer = () => {
       <Container size="lg">
         <Grid gutter={50}>
           
-          {/* --- COLUMN 1: BRANDING --- */}
           <Grid.Col span={{ base: 12, md: 5 }}>
             <Stack gap="lg">
               <Box>
@@ -28,7 +27,6 @@ const Footer = () => {
                 </Text>
               </Box>
 
-              {/* Social Icons (Matches Screenshot) */}
               <Group gap="sm">
                 {[
                   { icon: Instagram, link: '#' },
@@ -56,7 +54,6 @@ const Footer = () => {
             </Stack>
           </Grid.Col>
 
-          {/* --- COLUMN 2: QUICK LINKS --- */}
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
             <Stack gap="xl">
               <Text fw={700} size="sm" c="white" style={{ letterSpacing: '1px' }}>
@@ -79,7 +76,6 @@ const Footer = () => {
             </Stack>
           </Grid.Col>
 
-          {/* --- COLUMN 3: CONTACT INFO --- */}
           <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
             <Stack gap="xl">
               <Text fw={700} size="sm" c="white" style={{ letterSpacing: '1px' }}>
@@ -108,7 +104,6 @@ const Footer = () => {
 
         </Grid>
 
-        {/* --- BOTTOM BAR --- */}
         <Divider mt={50} mb={25} color="rgba(255,255,255,0.03)" />
         
         <Group justify="space-between" wrap="wrap">

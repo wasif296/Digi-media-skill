@@ -46,7 +46,6 @@ const Testimonials = () => {
     <Box py={80} style={{ background: '#020408' }}>
       <Container size="lg">
         
-        {/* Header Section */}
         <Stack align="center" mb={50} gap={5}>
           <Box style={{ border: '1px solid #10B981', padding: '4px 15px', borderRadius: '50px', background: 'rgba(16, 185, 129, 0.05)' }}>
              <Text size="xs" fw={800} style={{ color: '#10B981', letterSpacing: 2 }}>TESTIMONIALS</Text>
@@ -56,17 +55,16 @@ const Testimonials = () => {
           </Title>
         </Stack>
 
-        {/* --- COMPACT TESTIMONIAL CARD --- */}
         <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
           <Paper
-            p={{ base: 30, md: 50 }} // Padding kam kar di
+            p={{ base: 30, md: 50 }} 
             radius="32px"
             style={{
               background: '#0A0A0A',
               border: '1px solid rgba(16, 185, 129, 0.1)',
               position: 'relative',
               overflow: 'hidden',
-              minHeight: '350px', // Height kam kar di
+              minHeight: '350px', 
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -77,7 +75,6 @@ const Testimonials = () => {
             onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.4)')}
             onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.1)')}
           >
-            {/* Quote Icon (Smaller & Green) */}
             <Box style={{ position: 'absolute', top: 30, left: 30, opacity: 0.1 }}>
                <Quote size={60} color="#10B981" />
             </Box>
@@ -94,14 +91,14 @@ const Testimonials = () => {
                 <Stack align="center" gap="lg">
                   <Avatar 
                     src={testimonials[active].image} 
-                    size={80} // Avatar thora chota kiya
+                    size={80} 
                     radius="100%" 
                     style={{ border: '3px solid rgba(16, 185, 129, 0.2)' }}
                   />
 
                   <Text style={{ 
                     color: 'white', 
-                    fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', // Font size balanced
+                    fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', 
                     fontWeight: 500, 
                     fontStyle: 'italic',
                     maxWidth: '700px',
@@ -120,7 +117,6 @@ const Testimonials = () => {
               </motion.div>
             </AnimatePresence>
 
-            {/* --- NAVIGATION ARROWS (Green Hover) --- */}
             <Group gap="md" mt={40}>
               <ActionIcon 
                 variant="outline" 

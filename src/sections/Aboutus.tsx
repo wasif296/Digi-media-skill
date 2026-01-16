@@ -1,4 +1,4 @@
-import { Container, Title, Text, Box, Group, Stack, SimpleGrid, Paper, List, Button, ThemeIcon } from '@mantine/core';
+import { Container, Title, Text, Box, Group, SimpleGrid, Paper, List, Button, ThemeIcon } from '@mantine/core';
 import { motion } from 'framer-motion';
 import { Award, Users, Rocket, Globe, Check } from 'lucide-react';
 
@@ -15,7 +15,6 @@ const About = () => {
       <Container size="lg">
         <Group justify="space-between" align="flex-start" wrap="wrap" gap={60}>
           
-          {/* --- LEFT SIDE: CONTENT & STATS --- */}
           <Box style={{ flex: 1.2, minWidth: '300px' }}>
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -23,12 +22,10 @@ const About = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              {/* Green Badge */}
               <Box mb="md" style={{ border: '1px solid rgba(16, 185, 129, 0.3)', padding: '4px 15px', borderRadius: '50px', background: 'rgba(16, 185, 129, 0.05)', width: 'fit-content' }}>
                 <Text size="xs" fw={800} style={{ color: '#10B981', letterSpacing: 2 }}>ABOUT US</Text>
               </Box>
 
-              {/* Title with Teal Contrast */}
               <Title style={{ color: 'white', fontSize: 'clamp(2rem, 5vw, 3rem)', lineHeight: 1.1, fontWeight: 900 }}>
                 Leading Digital Marketing <br /> Agency in <span style={{ color: '#2DD4BF' }}>Pakistan</span>
               </Title>
@@ -40,7 +37,6 @@ const About = () => {
                 With a decade of expertise and a passion for innovation, we craft digital strategies that don't just meet expectations—they exceed them.
               </Text>
 
-              {/* Stats Mini Grid (Green Theme) */}
               <SimpleGrid cols={{ base: 2, sm: 4 }} mt={50} spacing="md">
                 {stats.map((item, index) => (
                   <Paper 
@@ -62,7 +58,6 @@ const About = () => {
             </motion.div>
           </Box>
 
-          {/* --- RIGHT SIDE: GROWTH PARTNER CARD --- */}
           <Box style={{ flex: 0.8, minWidth: '320px' }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -81,7 +76,6 @@ const About = () => {
                 }}
               >
                 <Group mb="xl">
-                  {/* Icon Box in Green */}
                   <Box style={{ background: '#10B981', padding: '10px', borderRadius: '12px' }}>
                     <Users size={24} color="white" />
                   </Box>
@@ -108,7 +102,6 @@ const About = () => {
                   <List.Item>ROI Focused</List.Item>
                 </List>
 
-                {/* Button with Green-Teal Gradient */}
                 <Button 
                   fullWidth 
                   mt={40} 
