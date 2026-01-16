@@ -11,7 +11,7 @@ const stats = [
 
 const About = () => {
   return (
-    <Box py={100} style={{ background: '#020408' }}>
+    <Box py={100} mt="10%" style={{ background: '#020408' }}>
       <Container size="lg">
         <Group justify="space-between" align="flex-start" wrap="wrap" gap={60}>
           

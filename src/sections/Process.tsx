@@ -8,21 +8,21 @@ const steps = [
     title: "Strategy",
     desc: "We analyze your business, competitors, and target audience to craft a winning digital strategy.",
     icon: Lightbulb,
-    color: "#3b82f6" 
+    color: "#2DD4BF" 
   },
   {
     id: "02",
     title: "Execution",
     desc: "Our team implements the strategy with precision, launching campaigns across all channels.",
     icon: Rocket,
-    color: "#3b82f6"
+    color: "#2DD4BF"
   },
   {
     id: "03",
     title: "Growth",
     desc: "We track, optimize, and scale your results to maximize ROI and sustainable growth.",
     icon: TrendingUp,
-    color: "#3b82f6"
+    color: "#2DD4BF"
   }
 ];
 
@@ -32,11 +32,11 @@ const Process = () => {
       <Container size="lg">
         
         <Stack align="center" mb={80} gap={5}>
-          <Text size="xs" fw={800} style={{ color: '#3b82f6', letterSpacing: '3px', textTransform: 'uppercase' }}>
+          <Text size="xs" fw={800} style={{ color: '#2DD4BF', letterSpacing: '3px', textTransform: 'uppercase' }}>
             How We Work
           </Text>
           <Title order={2} style={{ color: 'white', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800 }}>
-            Our <span style={{ color: '#3b82f6' }}>Process</span>
+            Our <span style={{ color: '#2DD4BF' }}>Process</span>
           </Title>
           <Text c="dimmed" size="sm" fw={500} ta="center" style={{ maxWidth: 500 }}>
             A proven 3-step approach that delivers measurable results
@@ -92,7 +92,7 @@ const Process = () => {
                     position: 'relative', zIndex: 1,
                     boxShadow: '0 0 15px rgba(59, 130, 246, 0.2)'
                   }}>
-                    <step.icon size={24} color="#3b82f6" />
+                    <step.icon size={24} color="#2DD4BF" />
                   </Box>
 
                   <Stack gap="sm" style={{ position: 'relative', zIndex: 1 }}>
@@ -111,7 +111,7 @@ const Process = () => {
                   position: 'absolute', right: -12, zIndex: 10,
                   display: 'flex', alignItems: 'center'
                 }}>
-                  <ArrowRight size={20} color="#3b82f6" style={{ opacity: 0.4 }} />
+                  <ArrowRight size={20} color="#2DD4BF" style={{ opacity: 0.4 }} />
                 </Box>
               )}
 
