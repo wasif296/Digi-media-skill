@@ -35,8 +35,24 @@ const Hero = () => {
           </Box>
           <Group gap="md" justify="center" style={{ width: '100%' }} wrap="wrap" justify-md="flex-start">
             <Button size="lg" radius="md" w={{ base: '100%', sm: 'auto' }} rightSection={<ArrowRight size={18} />} style={{ background: '#10B981' }}>Book a Call</Button>
-            <Button size="lg" radius="md" variant="outline" w={{ base: '100%', sm: 'auto' }} leftSection={<Play size={14} fill="#10B981" color="#10B981" />} style={{ border: '1px solid #1a1a1a', color: 'white', background: 'rgba(255,255,255,0.02)' }}>View Work</Button>
-          </Group>
+<Button 
+  size="lg" 
+  radius="md" 
+  variant="outline" 
+  w={{ base: '100%', sm: 'auto' }} 
+  
+  onClick={() => {
+    const element = document.getElementById('portfolio');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }}
+  
+  leftSection={<Play size={14} fill="#10B981" color="#10B981" />} 
+  style={{ border: '1px solid #1a1a1a', color: 'white', background: 'rgba(255,255,255,0.02)' }}
+>
+  View Work
+</Button>          </Group>
         </Stack>
         <Box style={{ flex: 1, width: '100%', display: 'flex', justifyContent: 'center' }}>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}>
