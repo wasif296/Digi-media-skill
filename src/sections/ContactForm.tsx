@@ -46,7 +46,7 @@ const ContactForm = () => {
       message: formData.message,
     }, publicKey)
       .then(() => {
-        toast.success("Inquiry Sent! ✨");
+        toast.success("Inquiry Sent! ");
         setStep(1);
         setFormData({ fullName: '', email: '', phone: '', company: '', services: [], message: '' });
       })
@@ -80,7 +80,7 @@ const ContactForm = () => {
                 }}>
                    {step > s ? <Check size={20} color="white" strokeWidth={3} /> : <Text fw={900} size="sm" c={step >= s ? "white" : "gray.6"}>{s}</Text>}
                 </Box>
-                {s < 4 && <Box style={{ width: '80px', height: '3px', background: step > s ? '#10B981' : '#1A1A1A', transition: '0.4s' }} />}
+                {s < 3 && <Box style={{ width: '80px', height: '3px', background: step > s ? '#10B981' : '#1A1A1A', transition: '0.4s' }} />}
              </Group>
            ))}
         </Group>
