@@ -15,7 +15,7 @@ export interface AdminCredentials {
 }
 
 
-const API_URL = "http://localhost:3000";
+const API_URL = "https://digi-media-skill-backend.vercel.app/";
 
 const api = axios.create({
   baseURL: API_URL,
