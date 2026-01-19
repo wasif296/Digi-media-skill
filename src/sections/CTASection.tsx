@@ -86,7 +86,7 @@ const CTASection = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Button 
+            {/* <Button 
               size="xl" 
               radius="md" 
               variant="gradient"
@@ -101,7 +101,7 @@ const CTASection = () => {
               }}
             >
               Book Your Free Audit
-            </Button>
+            </Button> */}
           </motion.div>
 
         </Stack>
