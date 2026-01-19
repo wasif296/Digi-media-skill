@@ -16,7 +16,7 @@ const industries = [
     icon: Home,
     image: realEstateImg,
     stats: ["250% Lead Increase", "85% Lower CPA"],
-    align: 'left' // Text left, Image right
+    align: 'left' 
   },
   {
     id: "02",

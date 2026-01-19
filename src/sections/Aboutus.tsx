@@ -103,25 +103,16 @@ const About = () => {
                 </List>
 
                 <Button 
-  fullWidth 
-  mt={40} 
-  size="lg" 
-  radius="md" 
-  variant="gradient"
-  gradient={{ from: '#10B981', to: '#2DD4BF', deg: 90 }}
-  
-  // --- YE LINE ADD KAREIN ---
-  onClick={() => {
-    const element = document.getElementById('contact');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }}
-  
-  style={{ fontWeight: 800, boxShadow: '0 10px 20px rgba(16, 185, 129, 0.2)' }}
->
-  Partner With Us
-</Button>
+                  fullWidth 
+                  mt={40} 
+                  size="lg" 
+                  radius="md" 
+                  variant="gradient"
+                  gradient={{ from: '#10B981', to: '#2DD4BF', deg: 90 }}
+                  style={{ fontWeight: 800, boxShadow: '0 10px 20px rgba(16, 185, 129, 0.2)' }}
+                >
+                  Partner With Us
+                </Button>
               </Paper>
             </motion.div>
           </Box>

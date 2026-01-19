@@ -18,6 +18,8 @@ import { Lock, Mail, ShieldCheck, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
+import { loginAdminApi } from '../api'; 
+
 import logoImg from '../assets/digi media.jpg'; 
 
 const LoginPage = () => {
@@ -31,13 +33,17 @@ const LoginPage = () => {
     },
   });
 
-  const handleLogin = (values: typeof form.values) => {
-    if (values.email === "admin@digimedia.com" && values.password === "admin123") {
-      localStorage.setItem('isAdmin', 'true');
-      toast.success('Access Granted! ✨');
-      navigate('/admin/dashboard'); 
-    } else {
-      toast.error('Invalid Credentials! Access Denied.');
+  const handleLogin = async (values: typeof form.values) => {
+    try {
+      const res = await loginAdminApi(values);
+
+      if (res.status === 200 || res.status === 201) {
+        localStorage.setItem('isAdmin', 'true');
+        toast.success('Access Granted! Welcome back Admin. ✨');
+        navigate('/admin/dashboard'); 
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Access Denied! Invalid Credentials.');
     }
   };
 
@@ -127,7 +133,7 @@ const LoginPage = () => {
                   {...form.getInputProps('email')}
                 />
                 
-                <PasswordInput 
+                <PasswordInput
                   label={<Text size="xs" fw={800} c="dimmed" mb={5}>SECURITY KEY</Text>}
                   placeholder="••••••••" 
                   required 

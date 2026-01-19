@@ -1,72 +1,98 @@
 import { useState, useEffect } from 'react';
 import { 
   Table, Button, Group, Title, Text, ActionIcon, Modal, 
-  TextInput, Select, Stack, Image, Box, Paper, Badge, Container, FileButton, UnstyledButton 
+  TextInput, Select, Stack, Image, Box, Paper, Badge, Container, FileButton, UnstyledButton, Loader, Center
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { Plus, Pencil, Trash2, Upload, LogOut, LayoutDashboard, ShieldCheck } from 'lucide-react';
+import { Plus, Pencil, Trash2, Upload, LogOut, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
+import { getProjects, addProject, updateProject, deleteProject, type RecordData } from '../api';
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<RecordData[]>([]); 
+  const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-
-  // --- 1. LOGOUT LOGIC (Security Fix) ---
-  const handleLogout = () => {
-    localStorage.removeItem('isAdmin'); // Security key mita di
-    toast.success("Logged out successfully! ✨");
-    navigate('/admin/login', { replace: true }); // replace: true history stack saaf kar deta hai
-  };
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const form = useForm({
     initialValues: { title: '', category: 'Web Design', result: '', imageUrl: '', link: '' },
   });
 
+  
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await getProjects();
+      setProjects(res.data);
+    } catch {
+      toast.error("Could not sync with Database ");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  
+  const handleLogout = () => {
+    localStorage.removeItem('isAdmin'); 
+    toast.success("Logged out successfully! ✨");
+    navigate('/admin/login', { replace: true }); 
+  };
+
+  
   const handleImageUpload = (file: File | null) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         form.setFieldValue('imageUrl', reader.result as string);
-        toast.success("Image Uploaded! 📸");
+        toast.success("Image Ready! ");
       };
       reader.readAsDataURL(file);
     }
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem('digi_portfolio');
-    if (saved) setProjects(JSON.parse(saved));
-  }, []);
-
-  const handleSave = (values: typeof form.values) => {
+  
+  const handleSave = async (values: typeof form.values) => {
     if (!values.imageUrl) {
       toast.error("Upload image first!");
       return;
     }
-    let updated;
-    if (editingId !== null) {
-      updated = projects.map(p => p.id === editingId ? { ...values, id: editingId } : p);
-      toast.success("Project Updated! ✨");
-    } else {
-      updated = [{ ...values, id: Date.now() }, ...projects];
-      toast.success("Project Added! 🚀");
+
+    try {
+      if (editingId) {
+        
+        await updateProject(editingId, values as RecordData);
+        toast.success("Masterpiece Updated! ");
+      } else {
+        
+        await addProject(values as RecordData);
+        toast.success("Project Added to Cloud! ");
+      }
+      fetchData(); 
+      setModalOpen(false);
+      setEditingId(null);
+      form.reset();
+    } catch {
+      toast.error("Server error: Save failed ");
     }
-    setProjects(updated);
-    localStorage.setItem('digi_portfolio', JSON.stringify(updated));
-    setModalOpen(false);
-    setEditingId(null);
-    form.reset();
   };
 
-  const handleDelete = (id: number) => {
-    if (window.confirm("Remove this masterpiece?")) {
-      const filtered = projects.filter(p => p.id !== id);
-      setProjects(filtered);
-      localStorage.setItem('digi_portfolio', JSON.stringify(filtered));
-      toast.success("Deleted");
+  
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Remove this masterpiece from Database?")) {
+      try {
+        await deleteProject(id);
+        toast.success("Deleted from Cloud");
+        fetchData(); 
+      } catch {
+        toast.error("Delete failed ");
+      }
     }
   };
 
@@ -75,7 +101,6 @@ const AdminDashboard = () => {
       <Toaster position="top-right" />
       
       <Container size="xl">
-        {/* --- HEADER WITH LOGOUT --- */}
         <Group justify="space-between" mb={50}>
           <Group gap="xs">
             <Box style={{ background: '#10B981', padding: '8px', borderRadius: '12px' }}>
@@ -99,53 +124,49 @@ const AdminDashboard = () => {
               Add Project
             </Button>
             
-            {/* LOGOUT BUTTON */}
-            <Button 
-              variant="subtle" 
-              color="red" 
-              leftSection={<LogOut size={18}/>}
-              onClick={handleLogout}
-              style={{ fontWeight: 800 }}
-            >
+            <Button variant="subtle" color="red" leftSection={<LogOut size={18}/>} onClick={handleLogout} style={{ fontWeight: 800 }}>
               Logout
             </Button>
           </Group>
         </Group>
 
-        {/* --- TABLE --- */}
         <Paper p="xl" radius="32px" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid #1a1a1a' }}>
-          <Table verticalSpacing="lg" horizontalSpacing="xl" variant="unstyled">
-            <Table.Thead>
-              <Table.Tr style={{ borderBottom: '1px solid #111' }}>
-                <Table.Th style={{ color: '#444', fontSize: '10px' }}>PREVIEW</Table.Th>
-                <Table.Th style={{ color: '#444', fontSize: '10px' }}>TITLE</Table.Th>
-                <Table.Th style={{ color: '#444', fontSize: '10px' }}>METRIC</Table.Th>
-                <Table.Th style={{ color: '#444', fontSize: '10px', textAlign: 'right' }}>ACTIONS</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {projects.map((item) => (
-                <Table.Tr key={item.id} style={{ borderBottom: '1px solid #0a0a0a' }}>
-                  <Table.Td><Image src={item.imageUrl} w={70} h={45} radius="md" /></Table.Td>
-                  <Table.Td>
-                    <Text fw={800} size="sm">{item.title}</Text>
-                    <Badge variant="dot" color="teal" size="xs">{item.category}</Badge>
-                  </Table.Td>
-                  <Table.Td><Text c="emerald.4" fw={900} fs="italic">{item.result}</Text></Table.Td>
-                  <Table.Td>
-                    <Group justify="flex-end" gap="xs">
-                      <ActionIcon variant="light" color="blue" onClick={() => { setEditingId(item.id); form.setValues(item); setModalOpen(true); }}><Pencil size={16}/></ActionIcon>
-                      <ActionIcon variant="light" color="red" onClick={() => handleDelete(item.id)}><Trash2 size={16}/></ActionIcon>
-                    </Group>
-                  </Table.Td>
+          {loading ? (
+            <Center p={100}><Loader color="teal" /></Center>
+          ) : (
+            <Table verticalSpacing="lg" horizontalSpacing="xl" variant="unstyled">
+              <Table.Thead>
+                <Table.Tr style={{ borderBottom: '1px solid #111' }}>
+                  <Table.Th style={{ color: '#444', fontSize: '10px' }}>PREVIEW</Table.Th>
+                  <Table.Th style={{ color: '#444', fontSize: '10px' }}>TITLE</Table.Th>
+                  <Table.Th style={{ color: '#444', fontSize: '10px' }}>METRIC</Table.Th>
+                  <Table.Th style={{ color: '#444', fontSize: '10px', textAlign: 'right' }}>ACTIONS</Table.Th>
                 </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
+              </Table.Thead>
+              <Table.Tbody>
+                {projects.map((item) => (
+                  <Table.Tr key={item._id} style={{ borderBottom: '1px solid #0a0a0a' }}>
+                    <Table.Td><Image src={item.imageUrl} w={70} h={45} radius="md" /></Table.Td>
+                    <Table.Td>
+                      <Text fw={800} size="sm">{item.title}</Text>
+                      <Badge variant="dot" color="teal" size="xs">{item.category}</Badge>
+                    </Table.Td>
+                    <Table.Td><Text c="emerald.4" fw={900} fs="italic">{item.result}</Text></Table.Td>
+                    <Table.Td>
+                      <Group justify="flex-end" gap="xs">
+                        <ActionIcon variant="light" color="blue" onClick={() => { setEditingId(item._id!); form.setValues(item); setModalOpen(true); }}><Pencil size={16}/></ActionIcon>
+                        <ActionIcon variant="light" color="red" onClick={() => handleDelete(item._id!)}><Trash2 size={16}/></ActionIcon>
+                      </Group>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          )}
         </Paper>
       </Container>
 
-      {/* --- MODAL --- */}
+      {}
       <Modal opened={modalOpen} onClose={() => setModalOpen(false)} title="MANAGE CASE STUDY" centered radius="24px" styles={{ content: { background: '#0A0A0A', color: 'white', border: '1px solid #222' }, header: { background: '#0A0A0A' } }}>
         <form onSubmit={form.onSubmit(handleSave)}>
           <Stack gap="md">

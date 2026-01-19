@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Container, Title, Text, Box, Stack, TextInput, Textarea, Button, Group, UnstyledButton, Paper, Center, SimpleGrid } from '@mantine/core';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Check, ArrowRight, ArrowLeft, MessageSquare, Target } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
+// --- API IMPORT ---
+import { sendInquiryApi } from '../api'; 
 
 const ContactForm = () => {
   const [step, setStep] = useState(1);
@@ -29,38 +30,43 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSendEmail = (e: React.FormEvent) => {
+  // --- NODEMAILER BACKEND SENDING LOGIC ---
+  const handleSendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const serviceId = 'YOUR_SERVICE_ID';
-    const templateId = 'YOUR_TEMPLATE_ID';
-    const publicKey = 'YOUR_PUBLIC_KEY';
-
-    emailjs.send(serviceId, templateId, {
-      from_name: formData.fullName,
-      from_email: formData.email,
-      phone: formData.phone,
-      company: formData.company,
-      services: formData.services.join(", "),
-      message: formData.message,
-    }, publicKey)
-      .then(() => {
-        toast.success("Inquiry Sent! ");
+    try {
+      // Seedha aapka NestJS backend call hoga
+      const res = await sendInquiryApi(formData);
+      
+      if (res.data.success) {
+        toast.success("Inquiry Sent via Studio Backend! 🚀", {
+          duration: 5000,
+          style: { borderRadius: '12px', background: '#10B981', color: '#fff' },
+        });
+        
+        // Reset form
         setStep(1);
         setFormData({ fullName: '', email: '', phone: '', company: '', services: [], message: '' });
-      })
-      .catch(() => toast.error("Error sending email"))
-      .finally(() => setLoading(false));
+      } else {
+        toast.error("Backend Error: Could not process inquiry.");
+      }
+    } catch (err) {
+      console.error("Submission Error:", err);
+      toast.error("Connection Error: Server is not responding. ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Box py={100} style={{ background: '#020408' }}>
+    <Box py={100} id="contact" style={{ background: '#020408' }}>
       <Container size={750}>
         
+        {/* Header Section */}
         <Stack align="center" mb={60} gap={5}>
           <Box style={{ border: '1px solid rgba(45, 212, 191, 0.3)', padding: '5px 15px', borderRadius: '50px', background: 'rgba(45, 212, 191, 0.05)' }}>
-             <Text size="xs" fw={800} c="#2DD4BF" style={{ letterSpacing: 2 }}>GET STARTED</Text>
+             <Text size="xs" fw={800} c="#10B981" style={{ letterSpacing: 2 }}>GET STARTED</Text>
           </Box>
           <Title order={2} ta="center" style={{ color: 'white', fontSize: '3.5rem', fontWeight: 900, letterSpacing: '-1.5px' }}>
             Let's <span style={{ color: '#2DD4BF' }}>Connect</span>
@@ -68,6 +74,7 @@ const ContactForm = () => {
           <Text c="dimmed" ta="center" fw={500}>Tell us about your project in a few simple steps</Text>
         </Stack>
 
+        {/* --- STEP INDICATORS (Line Fix) --- */}
         <Group justify="center" mb={60} gap={0} style={{ position: 'relative' }}>
            {[1, 2, 3].map((s) => (
              <Group key={s} gap={0}>
@@ -76,25 +83,20 @@ const ContactForm = () => {
                   background: step >= s ? '#10B981' : '#1A1A1A',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   border: `3px solid ${step >= s ? '#10B981' : '#333'}`,
-                  transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)', zIndex: 2
+                  transition: '0.4s', zIndex: 2
                 }}>
                    {step > s ? <Check size={20} color="white" strokeWidth={3} /> : <Text fw={900} size="sm" c={step >= s ? "white" : "gray.6"}>{s}</Text>}
                 </Box>
-                {s < 3 && <Box style={{ width: '80px', height: '3px', background: step > s ? '#10B981' : '#1A1A1A', transition: '0.4s' }} />}
+                {/* LINE FIX: Stops at step 3 */}
+                {s < 3 && (
+                  <Box style={{ width: '80px', height: '3px', background: step > s ? '#10B981' : '#1A1A1A', transition: '0.4s' }} />
+                )}
              </Group>
            ))}
         </Group>
 
-        <Paper 
-          p={{ base: 30, md: 60 }} 
-          radius="32px" 
-          style={{ 
-            background: 'rgba(10, 10, 10, 0.7)', 
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: '0 40px 100px rgba(0,0,0,0.6)',
-            backdropFilter: 'blur(20px)'
-          }}
-        >
+        {/* --- FORM BOX --- */}
+        <Paper p={{ base: 30, md: 60 }} radius="32px" style={{ background: 'rgba(10, 10, 10, 0.7)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 40px 100px rgba(0,0,0,0.6)', backdropFilter: 'blur(20px)' }}>
           <form onSubmit={handleSendEmail}>
             <AnimatePresence mode="wait">
               

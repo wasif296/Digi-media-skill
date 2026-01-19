@@ -34,7 +34,21 @@ const Hero = () => {
             </Text>
           </Box>
           <Group gap="md" justify="center" style={{ width: '100%' }} wrap="wrap" justify-md="flex-start">
-            <Button size="lg" radius="md" w={{ base: '100%', sm: 'auto' }} rightSection={<ArrowRight size={18} />} style={{ background: '#10B981' }}>Book a Call</Button>
+            <Button 
+  size="lg" 
+  radius="md" 
+  w={{ base: '100%', sm: 'auto' }} 
+  rightSection={<ArrowRight size={18} />} 
+  style={{ background: '#10B981' }}
+  onClick={() => {
+    const element = document.getElementById('contact');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }}
+>
+  Book your free audit
+</Button>
 <Button 
   size="lg" 
   radius="md" 
