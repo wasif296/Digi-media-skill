@@ -3,7 +3,6 @@ import { Container, Title, Text, Box, Stack, TextInput, Textarea, Button, Group,
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Check, ArrowRight, ArrowLeft, MessageSquare, Target } from 'lucide-react';
 import toast from 'react-hot-toast';
-// --- API IMPORT ---
 import { sendInquiryApi } from '../api'; 
 
 const ContactForm = () => {
@@ -30,13 +29,13 @@ const ContactForm = () => {
     }));
   };
 
-  // --- NODEMAILER BACKEND SENDING LOGIC ---
   const handleSendEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault(); 
+    
+    if (step < 3) return;
 
+    setLoading(true);
     try {
-      // Seedha aapka NestJS backend call hoga
       const res = await sendInquiryApi(formData);
       
       if (res.data.success) {
@@ -45,7 +44,6 @@ const ContactForm = () => {
           style: { borderRadius: '12px', background: '#10B981', color: '#fff' },
         });
         
-        // Reset form
         setStep(1);
         setFormData({ fullName: '', email: '', phone: '', company: '', services: [], message: '' });
       } else {
@@ -63,7 +61,6 @@ const ContactForm = () => {
     <Box py={100} id="contact" style={{ background: '#020408' }}>
       <Container size={750}>
         
-        {/* Header Section */}
         <Stack align="center" mb={60} gap={5}>
           <Box style={{ border: '1px solid rgba(45, 212, 191, 0.3)', padding: '5px 15px', borderRadius: '50px', background: 'rgba(45, 212, 191, 0.05)' }}>
              <Text size="xs" fw={800} c="#10B981" style={{ letterSpacing: 2 }}>GET STARTED</Text>
@@ -74,7 +71,6 @@ const ContactForm = () => {
           <Text c="dimmed" ta="center" fw={500}>Tell us about your project in a few simple steps</Text>
         </Stack>
 
-        {/* --- STEP INDICATORS (Line Fix) --- */}
         <Group justify="center" mb={60} gap={0} style={{ position: 'relative' }}>
            {[1, 2, 3].map((s) => (
              <Group key={s} gap={0}>
@@ -87,7 +83,6 @@ const ContactForm = () => {
                 }}>
                    {step > s ? <Check size={20} color="white" strokeWidth={3} /> : <Text fw={900} size="sm" c={step >= s ? "white" : "gray.6"}>{s}</Text>}
                 </Box>
-                {/* LINE FIX: Stops at step 3 */}
                 {s < 3 && (
                   <Box style={{ width: '80px', height: '3px', background: step > s ? '#10B981' : '#1A1A1A', transition: '0.4s' }} />
                 )}
@@ -95,9 +90,8 @@ const ContactForm = () => {
            ))}
         </Group>
 
-        {/* --- FORM BOX --- */}
         <Paper p={{ base: 30, md: 60 }} radius="32px" style={{ background: 'rgba(10, 10, 10, 0.7)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 40px 100px rgba(0,0,0,0.6)', backdropFilter: 'blur(20px)' }}>
-          <form>
+          <form onSubmit={handleSendEmail}>
             <AnimatePresence mode="wait">
               
               {step === 1 && (
@@ -111,7 +105,7 @@ const ContactForm = () => {
                       <TextInput label="Company Name" placeholder="Enter company name" styles={inputStyles} value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} />
                     </Stack>
                     <Group justify="flex-end">
-                      <Button size="lg" radius="xl" color="emerald" rightSection={<ArrowRight size={18}/>} onClick={() => setStep(2)} style={{ background: '#10B981', padding: '0 40px' }}>Continue</Button>
+                      <Button type="button" size="lg" radius="xl" color="emerald" rightSection={<ArrowRight size={18}/>} onClick={() => setStep(2)} style={{ background: '#10B981', padding: '0 40px' }}>Continue</Button>
                     </Group>
                   </Stack>
                 </motion.div>
@@ -125,6 +119,7 @@ const ContactForm = () => {
                       {servicesList.map(service => (
                         <UnstyledButton 
                           key={service} 
+                          type="button"
                           onClick={() => toggleService(service)}
                           style={{
                             padding: '20px 10px', borderRadius: '16px', textAlign: 'center', border: '1px solid',
@@ -139,8 +134,8 @@ const ContactForm = () => {
                       ))}
                     </SimpleGrid>
                     <Group justify="space-between" mt="xl">
-                      <Button variant="subtle" color="gray" leftSection={<ArrowLeft size={18}/>} onClick={() => setStep(1)}>Back</Button>
-                      <Button size="lg" radius="xl" color="emerald" onClick={() => setStep(3)} style={{ background: '#10B981', padding: '0 40px' }}>Continue</Button>
+                      <Button type="button" variant="subtle" color="gray" leftSection={<ArrowLeft size={18}/>} onClick={() => setStep(1)}>Back</Button>
+                      <Button type="button" size="lg" radius="xl" color="emerald" onClick={() => setStep(3)} style={{ background: '#10B981', padding: '0 40px' }}>Continue</Button>
                     </Group>
                   </Stack>
                 </motion.div>
@@ -152,8 +147,8 @@ const ContactForm = () => {
                     <Center><Stack align="center" gap={10}><MessageSquare color="#2DD4BF" size={35}/><Title order={3} c="white">Project Details</Title><Text size="xs" c="dimmed">Tell us about your goals</Text></Stack></Center>
                     <Textarea placeholder="Describe your project here..." minRows={6} styles={inputStyles} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} />
                     <Group justify="space-between" mt="xl">
-                      <Button variant="subtle" color="gray" leftSection={<ArrowLeft size={18}/>} onClick={() => setStep(2)}>Back</Button>
-                      <Button onSubmit={handleSendEmail} loading={loading} size="lg" radius="xl" color="emerald" type="submit" style={{ background: '#10B981', padding: '0 40px' }}>Submit Inquiry</Button>
+                      <Button type="button" variant="subtle" color="gray" leftSection={<ArrowLeft size={18}/>} onClick={() => setStep(2)}>Back</Button>
+                      <Button loading={loading} size="lg" radius="xl" color="emerald" type="submit" style={{ background: '#10B981', padding: '0 40px' }}>Submit Inquiry</Button>
                     </Group>
                   </Stack>
                 </motion.div>
