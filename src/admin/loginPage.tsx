@@ -118,7 +118,7 @@ const LoginPage = () => {
               <Stack gap="md">
                 <TextInput 
                   label={<Text size="xs" fw={800} c="dimmed" mb={5}>ADMINISTRATOR EMAIL</Text>}
-                  placeholder="admin@digimedia.com" 
+                  placeholder="digi@gmail.com" 
                   required 
                   leftSection={<Mail size={16} color="#10B981" />}
                   styles={{ 
