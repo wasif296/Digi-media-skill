@@ -21,7 +21,7 @@ const Footer = () => {
                 }}>
                   Digi Media Skill
                 </Text>
-                <Text mt="md" c="dimmed" size="sm" style={{ maxWidth: '320px', lineHeight: 1.5, opacity: 0.6 }}>
+                <Text mt="md" c="dimmed" size="sm" style={{ maxWidth: '350px', lineHeight: 1.5, opacity: 0.6 }}>
                   Your trusted partner for digital marketing excellence. 
                   Transforming businesses into digital success stories since day one.
                 </Text>
@@ -29,8 +29,8 @@ const Footer = () => {
 
               <Group gap="sm">
                 {[
-                  { icon: Instagram, link: '#' },
-                  { icon: Facebook, link: '#' },
+                  { icon: Instagram, link: 'https://www.instagram.com/digimediaskill/' },
+                  { icon: Facebook, link: 'https://www.facebook.com/profile.php?id=61555963475713' },
                   { icon: Linkedin, link: '#' },
                   { icon: Twitter, link: '#' }
                 ].map((social, index) => (
@@ -39,12 +39,18 @@ const Footer = () => {
                     size={38} 
                     radius="xl" 
                     variant="outline" 
+                    // --- LINKS LOGIC ---
+                    component={motion.a}
+                    href={social.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    // ------------------
                     style={{ 
                       borderColor: 'rgba(255,255,255,0.1)', 
                       background: 'transparent',
-                      color: '#777'
+                      color: '#777',
+                      cursor: 'pointer'
                     }}
-                    component={motion.button}
                     whileHover={{ scale: 1.1, borderColor: '#10B981', color: '#10B981' }}
                   >
                     <social.icon size={15} />
@@ -88,11 +94,11 @@ const Footer = () => {
                 </Group>
                 <Group gap="sm" wrap="nowrap">
                   <Phone size={16} color="#10B981" />
-                  <Text size="xs" style={{ color: '#888' }}>+92 300 1234567</Text>
+                  <Text size="xs" style={{ color: '#888' }}>+92 3352543404</Text>
                 </Group>
                 <Group gap="sm" wrap="nowrap">
                   <MapPin size={16} color="#10B981" />
-                  <Text size="xs" style={{ color: '#888' }}>Lahore, Pakistan</Text>
+                  <Text size="xs" style={{ color: '#888' }}>Pakistan</Text>
                 </Group>
                 <Group gap="sm" wrap="nowrap">
                   <Instagram size={16} color="#10B981" />

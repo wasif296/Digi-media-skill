@@ -97,7 +97,7 @@ const ContactForm = () => {
 
         {/* --- FORM BOX --- */}
         <Paper p={{ base: 30, md: 60 }} radius="32px" style={{ background: 'rgba(10, 10, 10, 0.7)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 40px 100px rgba(0,0,0,0.6)', backdropFilter: 'blur(20px)' }}>
-          <form onSubmit={handleSendEmail}>
+          <form>
             <AnimatePresence mode="wait">
               
               {step === 1 && (
@@ -153,7 +153,7 @@ const ContactForm = () => {
                     <Textarea placeholder="Describe your project here..." minRows={6} styles={inputStyles} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} />
                     <Group justify="space-between" mt="xl">
                       <Button variant="subtle" color="gray" leftSection={<ArrowLeft size={18}/>} onClick={() => setStep(2)}>Back</Button>
-                      <Button loading={loading} size="lg" radius="xl" color="emerald" type="submit" style={{ background: '#10B981', padding: '0 40px' }}>Submit Inquiry</Button>
+                      <Button onSubmit={handleSendEmail} loading={loading} size="lg" radius="xl" color="emerald" type="submit" style={{ background: '#10B981', padding: '0 40px' }}>Submit Inquiry</Button>
                     </Group>
                   </Stack>
                 </motion.div>
