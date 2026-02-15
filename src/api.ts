@@ -1,12 +1,13 @@
 import axios from "axios";
 
 export interface RecordData {
-  _id?: string; 
-  title: string;
-  category: string;
-  result: string;
-  imageUrl: string;
-  link: string;
+  _id?: string;
+  title?: string;
+  category?: string;
+  result?: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  link?: string;
 }
 
 export interface AdminCredentials {
@@ -24,22 +25,18 @@ const api = axios.create({
   },
 });
 
-
-export const loginAdminApi = (credentials: AdminCredentials) => 
+export const loginAdminApi = (credentials: AdminCredentials) =>
   api.post("/auth/login", credentials);
 
 export const getProjects = () => api.get<RecordData[]>("/portfolio");
 
-export const addProject = (data: RecordData) => 
-  api.post("/portfolio", data);
+export const addProject = (data: RecordData) => api.post("/portfolio", data);
 
 export const updateProject = (id: string, data: RecordData) =>
   api.put(`/portfolio/${id}`, data);
 
-export const deleteProject = (id: string) => 
-  api.delete(`/portfolio/${id}`);
+export const deleteProject = (id: string) => api.delete(`/portfolio/${id}`);
 
 export const sendInquiryApi = (data: any) => api.post("/contact/send", data);
-
 
 export default api;

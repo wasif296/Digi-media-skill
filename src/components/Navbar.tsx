@@ -11,11 +11,18 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import logoImg from "../assets/digi media.png";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
+  const navigate = useNavigate();
 
   const scrollToSection = (id: string) => {
+    if (id === "portfolio") {
+      navigate("/portfolio");
+      close();
+      return;
+    }
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -26,7 +33,7 @@ const Navbar = () => {
   const navLinks = [
     { label: "Services", id: "services" },
     { label: "Industries", id: "industries" },
-    // { label: "Portfolio", id: "portfolio" },
+    { label: "Portfolio", id: "portfolio" },
     { label: "About", id: "footer" },
     { label: "Contact", id: "contact" },
   ];
