@@ -22,7 +22,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 60000, // 60 second timeout for slow Render server
+  timeout: 90000, // 90 second timeout for email sending on Render
 });
 
 // Retry logic for failed requests

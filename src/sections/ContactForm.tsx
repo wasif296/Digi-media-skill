@@ -35,23 +35,35 @@ const ContactForm = () => {
     if (step < 3) return;
 
     setLoading(true);
+    const toastId = toast.loading('Sending your inquiry... (this may take 30-40 seconds)', {
+      style: { borderRadius: '12px', background: '#1A1A1A', color: '#fff' },
+    });
+
     try {
       const res = await sendInquiryApi(formData);
       
-      if (res.data.success) {
-        toast.success("Inquiry Sent via Studio Backend! 🚀", {
+      if (res.data.success || res.status === 200) {
+        toast.success("Inquiry Sent! 🚀 Check your email for confirmation", {
           duration: 5000,
           style: { borderRadius: '12px', background: '#10B981', color: '#fff' },
+          id: toastId,
         });
         
         setStep(1);
         setFormData({ fullName: '', email: '', phone: '', company: '', services: [], message: '' });
       } else {
-        toast.error("Backend Error: Could not process inquiry.");
+        toast.error("Could not process inquiry. Please try again.", {
+          duration: 5000,
+          id: toastId,
+        });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Submission Error:", err);
-      toast.error("Connection Error: Server is not responding. ❌");
+      const errorMsg = err?.response?.data?.message || err?.message || "Server error. Try again later.";
+      toast.error(`Error: ${errorMsg}`, {
+        duration: 5000,
+        id: toastId,
+      });
     } finally {
       setLoading(false);
     }
