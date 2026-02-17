@@ -15,14 +15,35 @@ export interface AdminCredentials {
   password?: string;
 }
 
-const API_URL = "https://digi-media-skill-backend.onrender.com"; // Render backend
+const API_URL = "https://digi-media-skill-backend.onrender.com";
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 60000, // 60 second timeout for slow Render server
 });
+
+// Retry logic for failed requests
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config;
+    if (!config || !config.__retryCount) {
+      config.__retryCount = 0;
+    }
+
+    config.__retryCount += 1;
+
+    if (config.__retryCount <= 1 && error.response?.status >= 500) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return api(config);
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export const loginAdminApi = (credentials: AdminCredentials) =>
   api.post("/auth/login", credentials);

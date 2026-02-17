@@ -85,7 +85,7 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const res = await fetch("http://localhost:3000/upload", {
+        const res = await fetch("https://digi-media-skill-backend.onrender.com/upload", {
           method: "POST",
           body: formData,
         });
@@ -107,7 +107,7 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const res = await fetch("http://localhost:3000/upload", {
+        const res = await fetch("https://digi-media-skill-backend.onrender.com/upload", {
           method: "POST",
           body: formData,
         });
