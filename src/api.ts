@@ -16,7 +16,7 @@ export interface AdminCredentials {
 }
 //test//
 
-const API_URL = "https://digi-media-skill-backend.vercel.app";
+const API_URL = "http://localhost:3000"; // Use backend on port 3000
 
 const api = axios.create({
   baseURL: API_URL,

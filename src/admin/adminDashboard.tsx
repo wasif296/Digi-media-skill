@@ -80,25 +80,47 @@ const AdminDashboard = () => {
     navigate("/admin/login", { replace: true });
   };
 
-  const handleImageUpload = (file: File | null) => {
+  const handleImageUpload = async (file: File | null) => {
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        form.setFieldValue("imageUrl", reader.result as string);
-        toast.success("Image Ready! ");
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await fetch("http://localhost:3000/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        if (data.url) {
+          form.setFieldValue("imageUrl", data.url);
+          toast.success("Image uploaded to Cloudinary!");
+        } else {
+          toast.error("Image upload failed!");
+        }
+      } catch {
+        toast.error("Image upload failed!");
+      }
     }
   };
 
-  const handleVideoUpload = (file: File | null) => {
+  const handleVideoUpload = async (file: File | null) => {
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        form.setFieldValue("videoUrl", reader.result as string);
-        toast.success("Video Ready! ");
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await fetch("http://localhost:3000/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        if (data.url) {
+          form.setFieldValue("videoUrl", data.url);
+          toast.success("Video uploaded to Cloudinary!");
+        } else {
+          toast.error("Video upload failed!");
+        }
+      } catch {
+        toast.error("Video upload failed!");
+      }
     }
   };
 
