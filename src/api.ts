@@ -14,9 +14,8 @@ export interface AdminCredentials {
   email: string;
   password?: string;
 }
-//test//
 
-const API_URL = "http://localhost:3000"; // Use backend on port 3000
+const API_URL = "https://digi-media-skill-backend.onrender.com"; // Render backend
 
 const api = axios.create({
   baseURL: API_URL,
