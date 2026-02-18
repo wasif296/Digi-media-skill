@@ -17,7 +17,31 @@ const Navbar = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
   const navigate = useNavigate();
 
+  const isPortfolioPage = window.location.pathname === "/portfolio";
+
+  const navLinks = [
+    { label: "Services", id: "services" },
+    { label: "Industries", id: "industries" },
+    // Only show Portfolio link if not on portfolio page
+    ...(!isPortfolioPage ? [{ label: "Portfolio", id: "portfolio" }] : []),
+    { label: "About", id: "footer" },
+    { label: "Contact", id: "contact" },
+  ];
+
   const scrollToSection = (id: string) => {
+    if (isPortfolioPage) {
+      // On portfolio page, only allow navigation to home for non-portfolio links
+      if (id === "portfolio") return;
+      if (id === "home") {
+        navigate("/");
+        close();
+        return;
+      }
+      // For other sections, navigate to home and scroll
+      navigate(`/#${id}`);
+      close();
+      return;
+    }
     if (id === "portfolio") {
       navigate("/portfolio");
       close();
@@ -27,16 +51,11 @@ const Navbar = () => {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
       close();
+    } else {
+      navigate(`/#${id}`);
+      close();
     }
   };
-
-  const navLinks = [
-    { label: "Services", id: "services" },
-    { label: "Industries", id: "industries" },
-    { label: "Portfolio", id: "portfolio" },
-    { label: "About", id: "footer" },
-    { label: "Contact", id: "contact" },
-  ];
 
   return (
     <Box

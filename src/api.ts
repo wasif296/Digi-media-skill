@@ -15,6 +15,13 @@ export interface AdminCredentials {
   password?: string;
 }
 
+export interface ProfileData {
+  name: string;
+  title: string;
+  intro?: string;
+  avatarUrl?: string;
+}
+
 const API_URL = "https://digi-media-skill-backend.onrender.com";
 
 const api = axios.create({
@@ -42,7 +49,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export const loginAdminApi = (credentials: AdminCredentials) =>
@@ -58,5 +65,20 @@ export const updateProject = (id: string, data: RecordData) =>
 export const deleteProject = (id: string) => api.delete(`/portfolio/${id}`);
 
 export const sendInquiryApi = (data: any) => api.post("/contact/send", data);
+
+export const getProfile = () => api.get<ProfileData>("/profile");
+
+export const updateProfile = (
+  data: Partial<ProfileData> & { avatar?: File | null },
+) => {
+  const formData = new FormData();
+  if (data.name) formData.append("name", data.name);
+  if (data.title) formData.append("title", data.title);
+  if (data.intro) formData.append("intro", data.intro);
+  if (data.avatar) formData.append("avatar", data.avatar);
+  return api.put("/profile", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
 
 export default api;

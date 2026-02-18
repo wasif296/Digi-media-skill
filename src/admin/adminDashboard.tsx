@@ -38,6 +38,9 @@ import {
   updateProject,
   deleteProject,
   type RecordData,
+  getProfile,
+  updateProfile,
+  type ProfileData,
 } from "../api";
 
 const AdminDashboard = () => {
@@ -46,6 +49,9 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const form = useForm({
     initialValues: {
@@ -70,8 +76,21 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchProfile = async () => {
+    setProfileLoading(true);
+    try {
+      const res = await getProfile();
+      setProfile(res.data);
+    } catch {
+      toast.error("Could not fetch profile info");
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchProfile();
   }, []);
 
   const handleLogout = () => {
@@ -85,10 +104,13 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const res = await fetch("https://digi-media-skill-backend.onrender.com/upload", {
-          method: "POST",
-          body: formData,
-        });
+        const res = await fetch(
+          "https://digi-media-skill-backend.onrender.com/upload",
+          {
+            method: "POST",
+            body: formData,
+          },
+        );
         const data = await res.json();
         if (data.url) {
           form.setFieldValue("imageUrl", data.url);
@@ -107,10 +129,13 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const res = await fetch("https://digi-media-skill-backend.onrender.com/upload", {
-          method: "POST",
-          body: formData,
-        });
+        const res = await fetch(
+          "https://digi-media-skill-backend.onrender.com/upload",
+          {
+            method: "POST",
+            body: formData,
+          },
+        );
         const data = await res.json();
         if (data.url) {
           form.setFieldValue("videoUrl", data.url);
@@ -152,6 +177,20 @@ const AdminDashboard = () => {
       } catch {
         toast.error("Delete failed ");
       }
+    }
+  };
+
+  const handleProfileSave = async (values: Partial<ProfileData>) => {
+    setProfileLoading(true);
+    try {
+      await updateProfile({ ...values, avatar: avatarFile });
+      toast.success("Profile updated!");
+      fetchProfile();
+      setAvatarFile(null);
+    } catch {
+      toast.error("Profile update failed");
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -214,8 +253,9 @@ const AdminDashboard = () => {
           p="xl"
           radius="32px"
           style={{
-            background: "rgba(255,255,255,0.01)",
-            border: "1px solid #1a1a1a",
+            background: "linear-gradient(135deg, #0A0A0A 60%, #10B981 100%)",
+            border: "1px solid #10B98133",
+            boxShadow: "0 8px 32px 0 rgba(16,185,129,0.12)",
           }}
         >
           {loading ? (
@@ -254,21 +294,44 @@ const AdminDashboard = () => {
                 {projects.map((item) => (
                   <Table.Tr
                     key={item._id}
-                    style={{ borderBottom: "1px solid #0a0a0a" }}
+                    style={{
+                      borderBottom: "1px solid #10B98133",
+                      background: "rgba(16,185,129,0.03)",
+                    }}
                   >
                     <Table.Td>
-                      <Image src={item.imageUrl} w={70} h={45} radius="md" />
+                      <Image
+                        src={item.imageUrl}
+                        w={70}
+                        h={45}
+                        radius="md"
+                        style={{ boxShadow: "0 2px 8px #10B98133" }}
+                      />
                     </Table.Td>
                     <Table.Td>
-                      <Text fw={800} size="sm">
+                      <Text
+                        fw={800}
+                        size="sm"
+                        style={{ color: "#fff", fontWeight: 700 }}
+                      >
                         {item.title}
                       </Text>
-                      <Badge variant="dot" color="teal" size="xs">
+                      <Badge
+                        variant="dot"
+                        color="teal"
+                        size="xs"
+                        style={{ marginTop: 4, fontWeight: 600 }}
+                      >
                         {item.category}
                       </Badge>
                     </Table.Td>
                     <Table.Td>
-                      <Text c="emerald.4" fw={900} fs="italic">
+                      <Text
+                        c="emerald.4"
+                        fw={900}
+                        fs="italic"
+                        style={{ color: "#10B981", fontWeight: 700 }}
+                      >
                         {item.result}
                       </Text>
                     </Table.Td>
@@ -302,11 +365,96 @@ const AdminDashboard = () => {
         </Paper>
       </Container>
 
-      {}
+      {/* Profile Management Section */}
+      <Paper
+        p="xl"
+        radius="lg"
+        mb={40}
+        style={{
+          background: "#181a1b",
+          border: "1px solid #10B98133",
+          maxWidth: 500,
+        }}
+      >
+        <Title order={3} mb={16} style={{ color: "#10B981" }}>
+          Profile Info
+        </Title>
+        {profileLoading ? (
+          <Loader color="teal" />
+        ) : (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleProfileSave({
+                name: (e.target as any).name.value,
+                title: (e.target as any).title.value,
+                intro: (e.target as any).intro.value,
+              });
+            }}
+          >
+            <Stack gap="md">
+              <Group>
+                <Image
+                  src={
+                    avatarFile
+                      ? URL.createObjectURL(avatarFile)
+                      : profile?.avatarUrl
+                  }
+                  width={80}
+                  height={80}
+                  radius={40}
+                  alt="Profile Avatar"
+                  style={{ objectFit: "cover", border: "2px solid #10B981" }}
+                />
+                <FileButton
+                  onChange={setAvatarFile}
+                  accept="image/png,image/jpeg"
+                >
+                  {(props) => (
+                    <Button
+                      {...props}
+                      leftSection={<Upload size={16} />}
+                      variant="outline"
+                      color="teal"
+                    >
+                      {avatarFile ? "Change" : "Upload"} Avatar
+                    </Button>
+                  )}
+                </FileButton>
+              </Group>
+              <TextInput
+                label="Name"
+                name="name"
+                defaultValue={profile?.name || ""}
+                required
+              />
+              <TextInput
+                label="Title"
+                name="title"
+                defaultValue={profile?.title || ""}
+                required
+              />
+              <TextInput
+                label="Intro"
+                name="intro"
+                defaultValue={profile?.intro || ""}
+              />
+              <Button type="submit" color="teal" loading={profileLoading}>
+                Save Profile
+              </Button>
+            </Stack>
+          </form>
+        )}
+      </Paper>
+
       <Modal
         opened={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="MANAGE CASE STUDY"
+        title={
+          <span style={{ color: "#10B981", fontWeight: 900, fontSize: 22 }}>
+            MANAGE PORTFOLIO ITEM
+          </span>
+        }
         centered
         radius="24px"
         styles={{
@@ -322,10 +470,11 @@ const AdminDashboard = () => {
           <Stack gap="md">
             <Box
               style={{
-                border: "2px dashed #222",
+                border: "2px dashed #10B981",
                 borderRadius: "16px",
                 padding: "20px",
                 textAlign: "center",
+                background: "rgba(16,185,129,0.03)",
               }}
             >
               <Group justify="center" gap="md">
@@ -342,6 +491,10 @@ const AdminDashboard = () => {
                           w="auto"
                           mx="auto"
                           radius="md"
+                          style={{
+                            boxShadow: "0 2px 8px #10B98133",
+                            border: "2px solid #10B981",
+                          }}
                         />
                       ) : (
                         <Stack align="center" gap={5}>
@@ -368,6 +521,8 @@ const AdminDashboard = () => {
                             display: "block",
                             margin: "0 auto",
                             borderRadius: 8,
+                            boxShadow: "0 2px 8px #10B98133",
+                            border: "2px solid #10B981",
                           }}
                           controls
                         />
@@ -404,6 +559,136 @@ const AdminDashboard = () => {
               label="Project Link"
               styles={inputStyles}
               {...form.getInputProps("link")}
+            />
+            <Button
+              fullWidth
+              mt="xl"
+              size="lg"
+              style={{ background: "#10B981" }}
+              type="submit"
+            >
+              COMMIT CHANGES
+            </Button>
+          </Stack>
+        </form>
+      </Modal>
+
+      <Modal
+        opened={profileLoading}
+        onClose={() => setProfileLoading(false)}
+        title={
+          <span style={{ color: "#10B981", fontWeight: 900, fontSize: 22 }}>
+            PROFILE MANAGEMENT
+          </span>
+        }
+        centered
+        radius="24px"
+        styles={{
+          content: {
+            background: "#0A0A0A",
+            color: "white",
+            border: "1px solid #222",
+          },
+          header: { background: "#0A0A0A" },
+        }}
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            handleProfileSave({
+              name: (form.name as any).value,
+              title: (form.title as any).value,
+              intro: (form.intro as any).value,
+            });
+          }}
+        >
+          <Stack gap="md">
+            <Box
+              style={{
+                border: "2px dashed #10B981",
+                borderRadius: "16px",
+                padding: "20px",
+                textAlign: "center",
+                background: "rgba(16,185,129,0.03)",
+              }}
+            >
+              <Group justify="center" gap="md">
+                <FileButton
+                  onChange={handleImageUpload}
+                  accept="image/png,image/jpeg"
+                >
+                  {(props) => (
+                    <UnstyledButton {...props} style={{ width: "100%" }}>
+                      {form.values.imageUrl ? (
+                        <Image
+                          src={form.values.imageUrl}
+                          h={120}
+                          w="auto"
+                          mx="auto"
+                          radius="md"
+                          style={{
+                            boxShadow: "0 2px 8px #10B98133",
+                            border: "2px solid #10B981",
+                          }}
+                        />
+                      ) : (
+                        <Stack align="center" gap={5}>
+                          <Upload size={30} color="#10B981" />
+                          <Text size="xs" fw={700} c="dimmed">
+                            UPLOAD IMAGE
+                          </Text>
+                        </Stack>
+                      )}
+                    </UnstyledButton>
+                  )}
+                </FileButton>
+                <FileButton
+                  onChange={handleVideoUpload}
+                  accept="video/mp4,video/webm,video/ogg"
+                >
+                  {(props) => (
+                    <UnstyledButton {...props} style={{ width: "100%" }}>
+                      {form.values.videoUrl ? (
+                        <video
+                          src={form.values.videoUrl}
+                          height={120}
+                          style={{
+                            display: "block",
+                            margin: "0 auto",
+                            borderRadius: 8,
+                            boxShadow: "0 2px 8px #10B98133",
+                            border: "2px solid #10B981",
+                          }}
+                          controls
+                        />
+                      ) : (
+                        <Stack align="center" gap={5}>
+                          <Upload size={30} color="#10B981" />
+                          <Text size="xs" fw={700} c="dimmed">
+                            UPLOAD VIDEO
+                          </Text>
+                        </Stack>
+                      )}
+                    </UnstyledButton>
+                  )}
+                </FileButton>
+              </Group>
+            </Box>
+            <TextInput
+              label="Name"
+              styles={inputStyles}
+              {...form.getInputProps("name")}
+            />
+            <TextInput
+              label="Title"
+              styles={inputStyles}
+              {...form.getInputProps("title")}
+            />
+            <TextInput
+              label="Intro"
+              styles={inputStyles}
+              {...form.getInputProps("intro")}
             />
             <Button
               fullWidth
