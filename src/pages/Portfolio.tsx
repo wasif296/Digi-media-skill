@@ -9,6 +9,7 @@ import {
   Group,
   Image,
   Transition,
+  Modal,
 } from "@mantine/core";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
@@ -25,6 +26,9 @@ const Portfolio = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<RecordData[]>([]);
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  // Video modal state
+  const [opened, setOpened] = useState(false);
+  const [modalVideoUrl, setModalVideoUrl] = useState<string | null>(null);
   // Testimonials data
   const testimonials = [
     {
@@ -179,7 +183,7 @@ const Portfolio = () => {
                     size="lg"
                     radius="md"
                     style={{
-                      background: "#4ade15",
+                      background: "#0fb67f",
                       color: "#fff",
                       fontWeight: 800,
                       fontSize: 20,
@@ -333,7 +337,14 @@ const Portfolio = () => {
                             boxShadow: "0 8px 32px 0 rgba(16,185,129,0.12)",
                           }}
                           className="portfolio-card"
-                          onClick={() => handleCardClick(item)}
+                          onClick={() => {
+                            if (item.videoUrl) {
+                              setModalVideoUrl(item.videoUrl!);
+                              setOpened(true);
+                            } else {
+                              handleCardClick(item);
+                            }
+                          }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.transform = "scale(1.03)";
                             const overlay = e.currentTarget.querySelector(
@@ -362,16 +373,55 @@ const Portfolio = () => {
                             }}
                           >
                             {item.videoUrl ? (
-                              <video
-                                src={item.videoUrl}
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  borderRadius: "16px 16px 0 0",
-                                  boxShadow: "0 2px 12px #10B98133",
-                                }}
-                                controls
-                              />
+                              <Box style={{ width: "100%", height: "100%", position: "relative" }}>
+                                <video
+                                  src={item.videoUrl}
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    borderRadius: "16px 16px 0 0",
+                                    boxShadow: "0 2px 12px #10B98133",
+                                  }}
+                                  muted
+                                  playsInline
+                                  poster={item.imageUrl || undefined}
+                                />
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    background: "rgba(0,0,0,0.15)",
+                                    borderRadius: "16px 16px 0 0",
+                                    pointerEvents: "none",
+                                  }}
+                                >
+                                  <svg
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 48 48"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <circle
+                                      cx="24"
+                                      cy="24"
+                                      r="24"
+                                      fill="#10B981"
+                                      fillOpacity="0.85"
+                                    />
+                                    <polygon
+                                      points="20,16 34,24 20,32"
+                                      fill="#fff"
+                                    />
+                                  </svg>
+                                </div>
+                              </Box>
                             ) : item.imageUrl ? (
                               <Image
                                 src={item.imageUrl}
@@ -455,7 +505,7 @@ const Portfolio = () => {
         </Transition>
       </Container>
       {/* Testimonials Section */}
-      <Container size="lg" mt={60}>
+      <Container size="lg" mt={80} mb={60}>
         <Title
           order={2}
           style={{
@@ -508,6 +558,25 @@ const Portfolio = () => {
           }
         }
       `}</style>
+      {/* Video Modal */}
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        size="lg"
+        centered
+        withCloseButton={true}
+        title="Project Video"
+        overlayProps={{ backgroundOpacity: 0.7, blur: 2 }}
+      >
+        {modalVideoUrl && (
+          <video
+            src={modalVideoUrl}
+            style={{ width: "100%", borderRadius: 12 }}
+            controls
+            autoPlay
+          />
+        )}
+      </Modal>
     </Box>
   );
 };
