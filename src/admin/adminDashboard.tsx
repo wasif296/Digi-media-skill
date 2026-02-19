@@ -400,9 +400,9 @@ const AdminDashboard = () => {
                       ? URL.createObjectURL(avatarFile)
                       : profile?.avatarUrl
                   }
-                  width={80}
-                  height={80}
-                  radius={40}
+                  width={150}
+                  height={450}
+                  radius={20}
                   alt="Profile Avatar"
                   style={{ objectFit: "cover", border: "2px solid #10B981" }}
                 />
