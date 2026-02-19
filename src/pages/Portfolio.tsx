@@ -28,7 +28,10 @@ const Portfolio = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   // Video modal state
   const [opened, setOpened] = useState(false);
-  const [modalVideoUrl, setModalVideoUrl] = useState<string | null>(null);
+  const [modalMedia, setModalMedia] = useState<{
+    type: "video" | "image";
+    url: string;
+  } | null>(null);
   // Testimonials data
   const testimonials = [
     {
@@ -339,7 +342,16 @@ const Portfolio = () => {
                           className="portfolio-card"
                           onClick={() => {
                             if (item.videoUrl) {
-                              setModalVideoUrl(item.videoUrl!);
+                              setModalMedia({
+                                type: "video",
+                                url: item.videoUrl!,
+                              });
+                              setOpened(true);
+                            } else if (item.imageUrl) {
+                              setModalMedia({
+                                type: "image",
+                                url: item.imageUrl!,
+                              });
                               setOpened(true);
                             } else {
                               handleCardClick(item);
@@ -373,7 +385,13 @@ const Portfolio = () => {
                             }}
                           >
                             {item.videoUrl ? (
-                              <Box style={{ width: "100%", height: "100%", position: "relative" }}>
+                              <Box
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  position: "relative",
+                                }}
+                              >
                                 <video
                                   src={item.videoUrl}
                                   style={{
@@ -423,17 +441,64 @@ const Portfolio = () => {
                                 </div>
                               </Box>
                             ) : item.imageUrl ? (
-                              <Image
-                                src={item.imageUrl}
-                                w="100%"
-                                h={180}
-                                radius={16}
+                              <Box
                                 style={{
-                                  objectFit: "cover",
-                                  borderRadius: "16px 16px 0 0",
-                                  boxShadow: "0 2px 12px #10B98133",
+                                  width: "100%",
+                                  height: 180,
+                                  position: "relative",
                                 }}
-                              />
+                              >
+                                <Image
+                                  src={item.imageUrl}
+                                  w="100%"
+                                  h={180}
+                                  radius={16}
+                                  style={{
+                                    objectFit: "cover",
+                                    borderRadius: "16px 16px 0 0",
+                                    boxShadow: "0 2px 12px #10B98133",
+                                  }}
+                                />
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    background: "rgba(0,0,0,0.10)",
+                                    borderRadius: "16px 16px 0 0",
+                                    pointerEvents: "none",
+                                  }}
+                                >
+                                  <svg
+                                    width="40"
+                                    height="40"
+                                    viewBox="0 0 40 40"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <circle
+                                      cx="20"
+                                      cy="20"
+                                      r="20"
+                                      fill="#10B981"
+                                      fillOpacity="0.85"
+                                    />
+                                    <rect
+                                      x="13"
+                                      y="17"
+                                      width="14"
+                                      height="6"
+                                      rx="2"
+                                      fill="#fff"
+                                    />
+                                  </svg>
+                                </div>
+                              </Box>
                             ) : (
                               <Text c="dimmed">No Preview</Text>
                             )}
@@ -558,22 +623,35 @@ const Portfolio = () => {
           }
         }
       `}</style>
-      {/* Video Modal */}
+      {/* Media Modal (Video/Image) */}
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
         size="lg"
         centered
         withCloseButton={true}
-        title="Project Video"
+        title={modalMedia?.type === "video" ? "Project Video" : "Project Image"}
         overlayProps={{ backgroundOpacity: 0.7, blur: 2 }}
       >
-        {modalVideoUrl && (
+        {modalMedia?.type === "video" && (
           <video
-            src={modalVideoUrl}
+            src={modalMedia.url}
             style={{ width: "100%", borderRadius: 12 }}
             controls
             autoPlay
+          />
+        )}
+        {modalMedia?.type === "image" && (
+          <img
+            src={modalMedia.url}
+            alt="Project"
+            style={{
+              width: "100%",
+              borderRadius: 12,
+              maxHeight: 500,
+              objectFit: "contain",
+              background: "#181a1b",
+            }}
           />
         )}
       </Modal>
