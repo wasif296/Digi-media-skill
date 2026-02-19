@@ -17,11 +17,11 @@ import { useNavigate } from "react-router-dom";
 import { Lock, Mail, ShieldCheck, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 import { loginAdminApi } from "../api";
 import logoImg from "../assets/digi media.jpg";
 
-// Error handling ke liye interface
 interface ApiError {
   response?: {
     data?: {
@@ -32,8 +32,8 @@ interface ApiError {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  // Form values ki type specify kar di
   const form = useForm({
     initialValues: { email: "", password: "" },
     validate: {
@@ -44,21 +44,26 @@ const LoginPage = () => {
     },
   });
 
-  // 'any' ko hata kar 'typeof form.values' use kiya aur error ko cast kiya
   const handleLogin = async (values: typeof form.values) => {
+    setLoading(true);
+
     try {
       const res = await loginAdminApi(values);
 
       if (res.status === 200 || res.status === 201) {
         localStorage.setItem("isAdmin", "true");
-        toast.success("Access Granted! Welcome back Admin. ✨");
+        toast.success("Access Granted! Welcome back Admin ✨");
+
         navigate("/admin/dashboard");
       }
     } catch (error) {
-      const err = error as ApiError; // Type casting instead of using 'any'
+      const err = error as ApiError;
+
       toast.error(
         err.response?.data?.message || "Access Denied! Invalid Credentials.",
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,7 +71,8 @@ const LoginPage = () => {
     <Box
       style={{
         background: "#020408",
-        backgroundImage: `linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px)`,
+        backgroundImage: `linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px)`,
         backgroundSize: "40px 40px",
         minHeight: "100vh",
         display: "flex",
@@ -75,31 +81,6 @@ const LoginPage = () => {
         overflow: "hidden",
       }}
     >
-      <Box
-        style={{
-          position: "absolute",
-          top: "10%",
-          left: "-5%",
-          width: "400px",
-          height: "400px",
-          background: "rgba(16, 185, 129, 0.06)",
-          filter: "blur(120px)",
-          borderRadius: "50%",
-        }}
-      />
-      <Box
-        style={{
-          position: "absolute",
-          bottom: "10%",
-          right: "-5%",
-          width: "350px",
-          height: "350px",
-          background: "rgba(45, 212, 191, 0.06)",
-          filter: "blur(100px)",
-          borderRadius: "50%",
-        }}
-      />
-
       <Container size={420} style={{ position: "relative", zIndex: 10 }}>
         <Center mb={40}>
           <motion.div
@@ -171,11 +152,11 @@ const LoginPage = () => {
               <Stack gap="md">
                 <TextInput
                   label={
-                    <Text size="xs" fw={800} c="dimmed" mb={5}>
-                      ADMINISTRATOR EMAIL
+                    <Text size="xs" fw={800} c="dimmed">
+                      ADMIN EMAIL
                     </Text>
                   }
-                  placeholder="digi@gmail.com"
+                  placeholder="admin@email.com"
                   required
                   leftSection={<Mail size={16} color="#10B981" />}
                   styles={{
@@ -192,8 +173,8 @@ const LoginPage = () => {
 
                 <PasswordInput
                   label={
-                    <Text size="xs" fw={800} c="dimmed" mb={5}>
-                      SECURITY KEY
+                    <Text size="xs" fw={800} c="dimmed">
+                      PASSWORD
                     </Text>
                   }
                   placeholder="••••••••"
@@ -218,7 +199,9 @@ const LoginPage = () => {
                     variant="gradient"
                     gradient={{ from: "#059669", to: "#10B981", deg: 90 }}
                     type="submit"
-                    rightSection={<ArrowRight size={18} />}
+                    loading={loading}
+                    disabled={loading}
+                    rightSection={!loading && <ArrowRight size={18} />}
                     style={{
                       height: "48px",
                       width: "220px",
@@ -228,7 +211,7 @@ const LoginPage = () => {
                       boxShadow: "0 10px 20px rgba(16, 185, 129, 0.2)",
                     }}
                   >
-                    AUTHENTICATE ACCESS
+                    {loading ? "AUTHENTICATING..." : "AUTHENTICATE ACCESS"}
                   </Button>
                 </Center>
               </Stack>
@@ -237,7 +220,7 @@ const LoginPage = () => {
         </motion.div>
 
         <Center mt={40}>
-          <Text size="xs" c="dimmed" fw={700} style={{ letterSpacing: 2 }}>
+          <Text size="xs" c="dimmed" fw={700}>
             DIGI MEDIA SKILLS • COMMAND CENTER
           </Text>
         </Center>

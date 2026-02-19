@@ -22,7 +22,8 @@ export interface ProfileData {
   avatarUrl?: string;
 }
 
-const API_URL = "https://digi-media-skill-backend.onrender.com";
+// const API_URL = "https://digi-media-skill-backend.onrender.com";
+const API_URL = "http://localhost:3000";
 
 const api = axios.create({
   baseURL: API_URL,
