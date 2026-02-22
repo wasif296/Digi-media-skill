@@ -63,7 +63,7 @@ const Footer = () => {
                 {[
                   {
                     icon: Instagram,
-                    link: "https://www.instagram.com/digimediaskill/",
+                    link: "https://www.instagram.com/digimediaskills?igsh=MTM2ZTdoOWRvZXVjbg==",
                   },
                   {
                     icon: Facebook,

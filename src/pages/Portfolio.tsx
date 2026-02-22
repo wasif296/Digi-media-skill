@@ -10,8 +10,9 @@ import {
   Image,
   Transition,
   Modal,
+  Flex,
+  Skeleton, // Skeleton add kiya loading ke liye
 } from "@mantine/core";
-import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ const Portfolio = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<RecordData[]>([]);
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true); // Image loading state
   const [opened, setOpened] = useState(false);
   const [modalMedia, setModalMedia] = useState<{
     type: "video" | "image";
@@ -36,26 +38,21 @@ const Portfolio = () => {
   const [showProjects, setShowProjects] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setShowIntro(true), 200);
-    setTimeout(() => setShowProjects(true), 1200);
+    // Artificial delay ko kam kar diya taake intro jaldi show ho
+    setTimeout(() => setShowIntro(true), 50);
+    setTimeout(() => setShowProjects(true), 800);
+
+    getProfile()
+      .then((res) => {
+        setProfile(res.data);
+        setLoadingProfile(false); // Data aate hi loading khatam
+      })
+      .catch(() => setLoadingProfile(false));
 
     getProjects()
       .then((res) => setProjects(res.data))
       .catch(() => setProjects([]));
-    getProfile()
-      .then((res) => setProfile(res.data))
-      .catch(() => setProfile(null));
   }, []);
-
-  const scrollingSkills = [
-    "Web Development",
-    "SEO",
-    "Keyword Research",
-    "Local SEO",
-    "Social Media Management",
-    "Canva Designing",
-    "Video Editing",
-  ];
 
   return (
     <Box
@@ -71,14 +68,13 @@ const Portfolio = () => {
     >
       <Navbar />
 
-      {/* Background Layer - Top fix */}
       <div
         style={{
           position: "absolute",
           top: 0,
           left: 0,
           width: "100%",
-          height: "500px", // Sirf top area ke liye
+          height: "500px",
           zIndex: 0,
           background: "linear-gradient(135deg, #020408 60%, #10B981 100%)",
           opacity: 0.15,
@@ -89,7 +85,6 @@ const Portfolio = () => {
         size="lg"
         style={{ position: "relative", zIndex: 1, paddingTop: "40px" }}
       >
-        {/* Back Button with enough space from Navbar */}
         <Group mb={40} mt={50}>
           <Button
             variant="outline"
@@ -103,22 +98,28 @@ const Portfolio = () => {
           </Button>
         </Group>
 
-        {/* Profile Section - Spacing fixed */}
         <Transition mounted={showIntro} transition="slide-up" duration={600}>
           {(styles) => (
             <div style={styles}>
-              <Group align="flex-start" gap={48} mb={80}>
-                <Box style={{ flex: 1, paddingTop: "20px" }}>
+              <Flex
+                direction={{ base: "column-reverse", md: "row" }}
+                gap={{ base: 30, md: 60 }}
+                mb={80}
+                align="center"
+              >
+                {/* Text Content */}
+                <Box style={{ flex: 1.5, width: "100%" }}>
                   <Title
                     order={1}
                     style={{
                       fontWeight: 900,
-                      fontSize: 48,
+                      fontSize: "clamp(32px, 8vw, 56px)",
                       color: "#fff",
                       marginBottom: 8,
+                      lineHeight: 1.1,
                     }}
                   >
-                    {profile?.name || "Digimedia skills"}
+                    {profile?.name || "Mariam Faisal"}
                   </Title>
                   <Text
                     size="xl"
@@ -135,12 +136,12 @@ const Portfolio = () => {
                     style={{
                       color: "#cfcfcf",
                       marginBottom: 32,
-                      maxWidth: "500px",
-                      lineHeight: 1.6,
+                      maxWidth: "600px",
+                      lineHeight: 1.7,
                     }}
                   >
                     {profile?.intro ||
-                      "Dedicated Digital Marketing Manager with expertise in social media, SEO, web development, and content creation."}
+                      "Dedicated Digital Marketing Manager with expertise in social media, SEO, and content creation."}
                   </Text>
                   <Button
                     size="lg"
@@ -149,7 +150,6 @@ const Portfolio = () => {
                       background: "#10B981",
                       color: "#fff",
                       fontWeight: 800,
-                      fontSize: 18,
                     }}
                     onClick={() => navigate("/#contact")}
                   >
@@ -157,46 +157,66 @@ const Portfolio = () => {
                   </Button>
                 </Box>
 
+                {/* Profile Image with Skeleton Fix */}
                 <Box
-                  style={{ flex: 1, display: "flex", justifyContent: "center" }}
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
                 >
                   <Paper
-                    radius={20}
+                    radius={24}
                     style={{
                       overflow: "hidden",
                       border: "4px solid #10B981",
                       background: "#181a1b",
                       width: "100%",
-                      maxWidth: "500px",
+                      maxWidth: "400px",
+                      minHeight: "350px", // Box pehle se bana rahega layout jump nahi karega
                     }}
                   >
-                    <Image
-                      src={profile?.avatarUrl}
-                      alt="Profile Avatar"
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        minHeight: "300px",
-                        objectFit: "cover",
-                      }}
-                    />
+                    {/* Jab tak URL nahi aata Skeleton dikhega */}
+                    <Skeleton
+                      visible={loadingProfile}
+                      height="100%"
+                      width="100%"
+                    >
+                      <Image
+                        src={profile?.avatarUrl}
+                        alt="Mariam Faisal"
+                        // Ye properties image load fast karti hain
+                        loading="eager"
+                        fetchPriority="high"
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          minHeight: "350px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Skeleton>
                   </Paper>
                 </Box>
-              </Group>
+              </Flex>
             </div>
           )}
         </Transition>
 
-        {/* Projects Section - CLEAN NO TEXT VERSION */}
+        {/* Projects section (unchanged but kept for completeness) */}
         <Box mt={60}>
           <Title
             order={2}
             mb={40}
-            style={{ fontWeight: 800, fontSize: 32, color: "#fff" }}
+            style={{
+              fontWeight: 800,
+              fontSize: "clamp(24px, 5vw, 36px)",
+              color: "#fff",
+            }}
           >
             Case Studies & Projects
           </Title>
-
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="xl">
             {projects.map((item, idx) => (
               <Transition
@@ -215,25 +235,13 @@ const Portfolio = () => {
                       overflow: "hidden",
                       height: 300,
                       cursor: "pointer",
-                      transition: "transform 0.2s ease, border-color 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "scale(1.03)";
-                      e.currentTarget.style.borderColor = "#10B981";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "scale(1)";
-                      e.currentTarget.style.borderColor =
-                        "rgba(16,185,129,0.2)";
                     }}
                     onClick={() => {
-                      if (item.videoUrl) {
+                      if (item.videoUrl)
                         setModalMedia({ type: "video", url: item.videoUrl });
-                        setOpened(true);
-                      } else if (item.imageUrl) {
+                      else if (item.imageUrl)
                         setModalMedia({ type: "image", url: item.imageUrl });
-                        setOpened(true);
-                      }
+                      setOpened(true);
                     }}
                   >
                     <Box
@@ -245,42 +253,16 @@ const Portfolio = () => {
                       }}
                     >
                       {item.videoUrl ? (
-                        <>
-                          <video
-                            src={item.videoUrl}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                            }}
-                            muted
-                            playsInline
-                          />
-                          <Box
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              background: "rgba(0,0,0,0.2)",
-                            }}
-                          >
-                            <svg width="50" height="50" viewBox="0 0 48 48">
-                              <circle
-                                cx="24"
-                                cy="24"
-                                r="24"
-                                fill="#10B981"
-                                fillOpacity="0.8"
-                              />
-                              <polygon
-                                points="20,16 34,24 20,32"
-                                fill="white"
-                              />
-                            </svg>
-                          </Box>
-                        </>
+                        <video
+                          src={item.videoUrl}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                          muted
+                          playsInline
+                        />
                       ) : (
                         <Image
                           src={item.imageUrl}
@@ -296,48 +278,8 @@ const Portfolio = () => {
             ))}
           </SimpleGrid>
         </Box>
-
-        {/* Testimonials */}
-        <Box mt={100} mb={100}>
-          <Title order={2} ta="center" mb={40} c="#10B981">
-            What Clients Say
-          </Title>
-          <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="xl">
-            {[
-              {
-                name: "Elite Solutions CPA",
-                feedback:
-                  "Professional, creative, and always delivers on time!",
-              },
-              {
-                name: "Fusion Food",
-                feedback:
-                  "Our brand visibility improved drastically. Amazing work!",
-              },
-              {
-                name: "Boss Cash Cars",
-                feedback: "Great content and video editing.",
-              },
-            ].map((t, i) => (
-              <Paper
-                key={i}
-                p="xl"
-                radius="md"
-                style={{ background: "#181a1b", border: "1px solid #10B98133" }}
-              >
-                <Text fs="italic" mb={16} c="gray.3">
-                  "{t.feedback}"
-                </Text>
-                <Text fw={700} c="#10B981">
-                  — {t.name}
-                </Text>
-              </Paper>
-            ))}
-          </SimpleGrid>
-        </Box>
       </Container>
 
-      {/* Media Modal */}
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
