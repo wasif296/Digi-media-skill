@@ -38,10 +38,7 @@ import {
   updateProject,
   deleteProject,
   type RecordData,
-  getProfile,
-  updateProfile,
-  type ProfileData,
-} from "../api";
+} from "../api"; // Profile related imports hata diye hain
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -49,9 +46,6 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const form = useForm({
     initialValues: {
@@ -76,22 +70,9 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchProfile = async () => {
-    setProfileLoading(true);
-    try {
-      const res = await getProfile();
-      setProfile(res.data);
-    } catch {
-      toast.error("Could not fetch profile info");
-    } finally {
-      setProfileLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchData();
-    fetchProfile();
-  }, []);
+  }, []); // Profile fetch yahan se hata diya
 
   const handleLogout = () => {
     localStorage.removeItem("isAdmin");
@@ -150,7 +131,6 @@ const AdminDashboard = () => {
   };
 
   const handleSave = async (values: typeof form.values) => {
-    // No field is mandatory now
     try {
       if (editingId) {
         await updateProject(editingId, values as RecordData);
@@ -177,20 +157,6 @@ const AdminDashboard = () => {
       } catch {
         toast.error("Delete failed ");
       }
-    }
-  };
-
-  const handleProfileSave = async (values: Partial<ProfileData>) => {
-    setProfileLoading(true);
-    try {
-      await updateProfile({ ...values, avatar: avatarFile });
-      toast.success("Profile updated!");
-      fetchProfile();
-      setAvatarFile(null);
-    } catch {
-      toast.error("Profile update failed");
-    } finally {
-      setProfileLoading(false);
     }
   };
 
@@ -365,87 +331,7 @@ const AdminDashboard = () => {
         </Paper>
       </Container>
 
-      {/* Profile Management Section */}
-      <Paper
-        p="xl"
-        radius="lg"
-        mb={40}
-        style={{
-          background: "#181a1b",
-          border: "1px solid #10B98133",
-          maxWidth: 500,
-        }}
-      >
-        <Title order={3} mb={16} style={{ color: "#10B981" }}>
-          Profile Info
-        </Title>
-        {profileLoading ? (
-          <Loader color="teal" />
-        ) : (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleProfileSave({
-                name: (e.target as any).name.value,
-                title: (e.target as any).title.value,
-                intro: (e.target as any).intro.value,
-              });
-            }}
-          >
-            <Stack gap="md">
-              <Group>
-                <Image
-                  src={
-                    avatarFile
-                      ? URL.createObjectURL(avatarFile)
-                      : profile?.avatarUrl
-                  }
-                  width={150}
-                  height={450}
-                  radius={20}
-                  alt="Profile Avatar"
-                  style={{ objectFit: "cover", border: "2px solid #10B981" }}
-                />
-                <FileButton
-                  onChange={setAvatarFile}
-                  accept="image/png,image/jpeg"
-                >
-                  {(props) => (
-                    <Button
-                      {...props}
-                      leftSection={<Upload size={16} />}
-                      variant="outline"
-                      color="teal"
-                    >
-                      {avatarFile ? "Change" : "Upload"} Avatar
-                    </Button>
-                  )}
-                </FileButton>
-              </Group>
-              <TextInput
-                label="Name"
-                name="name"
-                defaultValue={profile?.name || ""}
-                required
-              />
-              <TextInput
-                label="Title"
-                name="title"
-                defaultValue={profile?.title || ""}
-                required
-              />
-              <TextInput
-                label="Intro"
-                name="intro"
-                defaultValue={profile?.intro || ""}
-              />
-              <Button type="submit" color="teal" loading={profileLoading}>
-                Save Profile
-              </Button>
-            </Stack>
-          </form>
-        )}
-      </Paper>
+      {/* --- Profile Info Section Yahan se Remove kar di gayi hai --- */}
 
       <Modal
         opened={modalOpen}
@@ -573,135 +459,7 @@ const AdminDashboard = () => {
         </form>
       </Modal>
 
-      <Modal
-        opened={profileLoading}
-        onClose={() => setProfileLoading(false)}
-        title={
-          <span style={{ color: "#10B981", fontWeight: 900, fontSize: 22 }}>
-            PROFILE MANAGEMENT
-          </span>
-        }
-        centered
-        radius="24px"
-        styles={{
-          content: {
-            background: "#0A0A0A",
-            color: "white",
-            border: "1px solid #222",
-          },
-          header: { background: "#0A0A0A" },
-        }}
-      >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const form = e.target as HTMLFormElement;
-            handleProfileSave({
-              name: (form.name as any).value,
-              title: (form.title as any).value,
-              intro: (form.intro as any).value,
-            });
-          }}
-        >
-          <Stack gap="md">
-            <Box
-              style={{
-                border: "2px dashed #10B981",
-                borderRadius: "16px",
-                padding: "20px",
-                textAlign: "center",
-                background: "rgba(16,185,129,0.03)",
-              }}
-            >
-              <Group justify="center" gap="md">
-                <FileButton
-                  onChange={handleImageUpload}
-                  accept="image/png,image/jpeg"
-                >
-                  {(props) => (
-                    <UnstyledButton {...props} style={{ width: "100%" }}>
-                      {form.values.imageUrl ? (
-                        <Image
-                          src={form.values.imageUrl}
-                          h={120}
-                          w="auto"
-                          mx="auto"
-                          radius="md"
-                          style={{
-                            boxShadow: "0 2px 8px #10B98133",
-                            border: "2px solid #10B981",
-                          }}
-                        />
-                      ) : (
-                        <Stack align="center" gap={5}>
-                          <Upload size={30} color="#10B981" />
-                          <Text size="xs" fw={700} c="dimmed">
-                            UPLOAD IMAGE
-                          </Text>
-                        </Stack>
-                      )}
-                    </UnstyledButton>
-                  )}
-                </FileButton>
-                <FileButton
-                  onChange={handleVideoUpload}
-                  accept="video/mp4,video/webm,video/ogg"
-                >
-                  {(props) => (
-                    <UnstyledButton {...props} style={{ width: "100%" }}>
-                      {form.values.videoUrl ? (
-                        <video
-                          src={form.values.videoUrl}
-                          height={120}
-                          style={{
-                            display: "block",
-                            margin: "0 auto",
-                            borderRadius: 8,
-                            boxShadow: "0 2px 8px #10B98133",
-                            border: "2px solid #10B981",
-                          }}
-                          controls
-                        />
-                      ) : (
-                        <Stack align="center" gap={5}>
-                          <Upload size={30} color="#10B981" />
-                          <Text size="xs" fw={700} c="dimmed">
-                            UPLOAD VIDEO
-                          </Text>
-                        </Stack>
-                      )}
-                    </UnstyledButton>
-                  )}
-                </FileButton>
-              </Group>
-            </Box>
-            <TextInput
-              label="Name"
-              styles={inputStyles}
-              {...form.getInputProps("name")}
-            />
-            <TextInput
-              label="Title"
-              styles={inputStyles}
-              {...form.getInputProps("title")}
-            />
-            <TextInput
-              label="Intro"
-              styles={inputStyles}
-              {...form.getInputProps("intro")}
-            />
-            <Button
-              fullWidth
-              mt="xl"
-              size="lg"
-              style={{ background: "#10B981" }}
-              type="submit"
-            >
-              COMMIT CHANGES
-            </Button>
-          </Stack>
-        </form>
-      </Modal>
+      {/* --- Profile Management Modal bhi yahan se remove kar diya gaya hai --- */}
     </Box>
   );
 };
@@ -712,9 +470,9 @@ const inputStyles = {
     color: "#666",
     fontSize: "10px",
     fontWeight: 700,
-    textTransform: "uppercase" as any,
+    textTransform: "uppercase",
     marginBottom: "5px",
   },
-};
+} as const;
 
 export default AdminDashboard;

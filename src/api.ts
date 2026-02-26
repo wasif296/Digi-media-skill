@@ -65,7 +65,15 @@ export const updateProject = (id: string, data: RecordData) =>
 
 export const deleteProject = (id: string) => api.delete(`/portfolio/${id}`);
 
-export const sendInquiryApi = (data: any) => api.post("/contact/send", data);
+export interface InquiryData {
+  name: string;
+  email: string;
+  message: string;
+  [key: string]: unknown; // Add this if there may be extra fields
+}
+
+export const sendInquiryApi = (data: InquiryData) =>
+  api.post("/contact/send", data);
 
 export const getProfile = () => api.get<ProfileData>("/profile");
 
