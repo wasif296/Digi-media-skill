@@ -35,9 +35,20 @@ const Portfolio = () => {
     setTimeout(() => setShowIntro(true), 50);
     setTimeout(() => setShowProjects(true), 800);
 
+    // Initial fetch
     getProjects()
       .then((res) => setProjects(res.data))
       .catch(() => setProjects([]));
+
+    // Polling every 10 seconds
+    const interval = setInterval(() => {
+      getProjects()
+        .then((res) => setProjects(res.data))
+        .catch(() => {});
+    }, 10000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
